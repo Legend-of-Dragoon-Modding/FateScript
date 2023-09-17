@@ -1,0 +1,42 @@
+{
+  parserClass="org.legendofdragoon.fatescript.psi.FateScriptParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="FateScript"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.legendofdragoon.fatescript.psi"
+  psiImplPackage="org.legendofdragoon.fatescript.psi.impl"
+
+  elementTypeHolderClass="org.legendofdragoon.fatescript.psi.FateScriptTypes"
+  elementTypeClass="org.legendofdragoon.fatescript.psi.FateScriptElementType"
+  tokenTypeClass="org.legendofdragoon.fatescript.psi.FateScriptTokenType"
+
+  tokens=[
+    eol='regexp:\n'
+    space='regexp:\s+'
+    comment='regexp:;.*'
+    dec='regexp:\d+'
+    hex='regexp:[a-fA-F\d]+'
+    fullhex='regexp:0x[a-fA-F\d]+'
+    id='regexp:[a-zA-Z_]\w*'
+    string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+  ]
+
+//  name(".*expr")='expression'
+//  extends(".*expr")=expr
+}
+
+root ::= root_item *
+private root_item ::= !<<eof>> line
+
+line ::= lineStart params? {pin=1 recoverWhile=lineRecover}
+private lineRecover ::= !(lineStart)
+
+lineStart ::= lineNumber? op {pin=2}
+lineNumber ::= hex+
+op ::= id
+params ::= param "," params | param
+param ::= methodRef | number
+methodRef ::= id "::" id
+number ::= dec | fullhex
