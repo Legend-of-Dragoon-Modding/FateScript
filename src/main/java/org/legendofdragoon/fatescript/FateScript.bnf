@@ -17,9 +17,9 @@
     space='regexp:\s+'
     comment='regexp:;.*'
     dec='regexp:\d+'
-    hex='regexp:[a-fA-F\d]{6}'
-    fullhex='regexp:0x[a-fA-F\d]+'
     id='regexp:[a-zA-Z_]\w*'
+    hex='regexp:[a-fA-F\d]+'
+    fullhex='regexp:0x[a-fA-F\d]+'
     string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
   ]
 
