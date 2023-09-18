@@ -19,6 +19,22 @@
     dec='regexp:\d+'
     id='regexp:[a-zA-Z_]\w*'
     hex='regexp:0x[a-fA-F\d]+'
+    paramstorage='regexp:stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
+    paramotherotherstorage='regexp:stor\s*?\[\s*?stor\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?,\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?,\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
+    paramotherstorageoffset='regexp:stor\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?,\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
+    paramgamevar1='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
+    paramgamevar2='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
+    paramgamevararray1='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
+    paramgamevararray2='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
+    paraminline1='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?]'
+    paraminline2='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?]'
+    paraminline3='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?]\s*?]'
+    paramgamevararray3='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
+    paramgamevararray4='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
+    paraminline6='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\+\s*?inl\s*?\[(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\+\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
+
+    stringattr='regexp:<[a-z]+(?:=0x[a-fA-F\d]{1,8}|\d{1,10})>'
+    validtext='regexp:.*?'
   ]
 
 //  name(".*expr")='expression'
@@ -26,20 +42,21 @@
 }
 
 root ::= line *
-private line ::= !<<eof>> (code | label)? eol+ {pin=2}
+private line ::= !<<eof>> (data | rel | entrypoint | code | label)? eol+ {pin=2}
 
+entrypoint ::= "entrypoint" labelRef
+rel ::= "rel" labelRef
+data ::= "data" (number | str)
+labelRef ::= ":" id
 code ::= op !":"
 label ::= id ":"
 op ::= id params?
 params ::= param (("," param)+)?
-param ::= methodRef | number | inline | jump | var | storage | cmp | id
+param ::= methodRef | number | inline | var | storage | cmp | id
 methodRef ::= id "::" id
 number ::= dec | hex
-inline ::= "inl" inlineIndex
-jump ::= ":" id
-jumpTable ::= jump (jumpTable | index)
-inlineIndex ::= "[" (inlineIndex | jumpTable | jump) "]"
-index ::= "[" (dec | storage "," dec | storage | jumpTable) ("+" dec)? "]"
-var ::= "var" index+
-storage ::= "stor" index
+inline ::= paraminline1 | paraminline2 | paraminline3 | paraminline6
+var ::= paramgamevar1 | paramgamevar2 | paramgamevararray1 | paramgamevararray2 | paramgamevararray3 | paramgamevararray4
+storage ::= paramstorage | paramotherotherstorage | paramotherstorageoffset
 cmp ::= "<=" | "<" | "==" | "!=" | ">" | ">=" | "&" | "!&"
+str ::= "str[" "]"
