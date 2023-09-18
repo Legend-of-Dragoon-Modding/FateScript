@@ -27,11 +27,9 @@
 //  extends(".*expr")=expr
 }
 
-root ::= root_item *
-private root_item ::= !<<eof>> line
+root ::= line *
+private line ::= !<<eof>> (code | label)? eol+ {pin=2}
 
-line ::= (code | label)? eol {pin=1 recoverWhile=lineRecover}
-private lineRecover ::= !(code | label)
 code ::= lineNumber? op !":"
 label ::= id ":"
 lineNumber ::= dec | hex
