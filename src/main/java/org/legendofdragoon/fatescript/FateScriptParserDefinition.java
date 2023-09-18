@@ -25,16 +25,6 @@ public class FateScriptParserDefinition implements ParserDefinition {
   }
 
   @Override
-  public @NotNull PsiParser createParser(final Project project) {
-    return new FateScriptParser();
-  }
-
-  @Override
-  public @NotNull IFileElementType getFileNodeType() {
-    return FILE;
-  }
-
-  @Override
   public @NotNull TokenSet getCommentTokens() {
     return FateScriptTokenSets.COMMENTS;
   }
@@ -45,12 +35,22 @@ public class FateScriptParserDefinition implements ParserDefinition {
   }
 
   @Override
-  public @NotNull PsiElement createElement(final ASTNode node) {
-    return FateScriptTypes.Factory.createElement(node);
+  public @NotNull PsiParser createParser(final Project project) {
+    return new FateScriptParser();
+  }
+
+  @Override
+  public @NotNull IFileElementType getFileNodeType() {
+    return FILE;
   }
 
   @Override
   public @NotNull PsiFile createFile(@NotNull final FileViewProvider viewProvider) {
     return new FateScriptFile(viewProvider);
+  }
+
+  @Override
+  public @NotNull PsiElement createElement(final ASTNode node) {
+    return FateScriptTypes.Factory.createElement(node);
   }
 }
