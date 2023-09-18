@@ -17,7 +17,7 @@
     space='regexp:\s+'
     comment='regexp:;.*'
     dec='regexp:\d+'
-    hex='regexp:[a-fA-F\d]+'
+    hex='regexp:[a-fA-F\d]{6}'
     fullhex='regexp:0x[a-fA-F\d]+'
     id='regexp:[a-zA-Z_]\w*'
     string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
@@ -30,13 +30,21 @@
 root ::= root_item *
 private root_item ::= !<<eof>> line
 
-line ::= lineStart params? {pin=1 recoverWhile=lineRecover}
-private lineRecover ::= !(lineStart)
+line ::= (code | label) {pin=1 recoverWhile=lineRecover}
+private lineRecover ::= !(code | label)
 
-lineStart ::= lineNumber? op {pin=2}
-lineNumber ::= hex+
-op ::= id
-params ::= param "," params | param
-param ::= methodRef | number
+code ::= lineNumber? op !":"
+label ::= id ":"
+lineNumber ::= dec | hex
+op ::= id params?
+params ::= param ", " params | param
+param ::= methodRef | number | inline | jump | var | storage
 methodRef ::= id "::" id
 number ::= dec | fullhex
+inline ::= "inl" inlineIndex
+jump ::= ":" id
+jumpTable ::= jump (jumpTable | index)
+inlineIndex ::= "[" (inlineIndex | jumpTable | jump) "]"
+index ::= "[" (dec | storage ", " dec | storage | jumpTable) (" + " dec)? "]"
+var ::= "var" index+
+storage ::= "stor" index
