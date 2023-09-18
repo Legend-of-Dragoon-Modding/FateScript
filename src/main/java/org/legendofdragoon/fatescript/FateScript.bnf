@@ -18,9 +18,7 @@
     comment='regexp:;.*'
     dec='regexp:\d+'
     id='regexp:[a-zA-Z_]\w*'
-    hex='regexp:[a-fA-F\d]+'
-    fullhex='regexp:0x[a-fA-F\d]+'
-    string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+    hex='regexp:0x[a-fA-F\d]+'
   ]
 
 //  name(".*expr")='expression'
@@ -30,14 +28,13 @@
 root ::= line *
 private line ::= !<<eof>> (code | label)? eol+ {pin=2}
 
-code ::= lineNumber? op !":"
+code ::= op !":"
 label ::= id ":"
-lineNumber ::= dec | hex
 op ::= id params?
 params ::= param (("," param)+)?
-param ::= methodRef | number | inline | jump | var | storage
+param ::= methodRef | number | inline | jump | var | storage | cmp | id
 methodRef ::= id "::" id
-number ::= dec | fullhex
+number ::= dec | hex
 inline ::= "inl" inlineIndex
 jump ::= ":" id
 jumpTable ::= jump (jumpTable | index)
@@ -45,3 +42,4 @@ inlineIndex ::= "[" (inlineIndex | jumpTable | jump) "]"
 index ::= "[" (dec | storage "," dec | storage | jumpTable) ("+" dec)? "]"
 var ::= "var" index+
 storage ::= "stor" index
+cmp ::= "<=" | "<" | "==" | "!=" | ">" | ">=" | "&" | "!&"
