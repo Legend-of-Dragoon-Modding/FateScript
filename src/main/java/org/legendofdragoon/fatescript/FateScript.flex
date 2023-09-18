@@ -19,7 +19,7 @@ import org.legendofdragoon.fatescript.psi.FateScriptTypes;
 
 EOL="\r"|"\n"|"\r\n"
 LINE_WS=[\ \t\f]
-WHITE_SPACE=({LINE_WS}|{EOL})+
+WHITE_SPACE=({LINE_WS})+
 LINE_COMMENT=;.*
 
 ALPHA=[:letter:]

@@ -13,7 +13,7 @@
   tokenTypeClass="org.legendofdragoon.fatescript.psi.FateScriptTokenType"
 
   tokens=[
-    eol='regexp:\n'
+    eol='regexp:\n+'
     space='regexp:\s+'
     comment='regexp:;.*'
     dec='regexp:\d+'
@@ -30,9 +30,8 @@
 root ::= root_item *
 private root_item ::= !<<eof>> line
 
-line ::= (code | label) {pin=1 recoverWhile=lineRecover}
+line ::= (code | label)? eol {pin=1 recoverWhile=lineRecover}
 private lineRecover ::= !(code | label)
-
 code ::= lineNumber? op !":"
 label ::= id ":"
 lineNumber ::= dec | hex
