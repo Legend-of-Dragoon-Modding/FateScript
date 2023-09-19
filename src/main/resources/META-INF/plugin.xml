@@ -37,5 +37,8 @@
     <lang.parserDefinition
             language="fatescript"
             implementationClass="org.legendofdragoon.fatescript.FateScriptParserDefinition"/>
+    <lang.syntaxHighlighterFactory
+            language="fatescript"
+            implementationClass="org.legendofdragoon.fatescript.FateScriptSyntaxHighlighterFactory"/>
   </extensions>
 </idea-plugin>

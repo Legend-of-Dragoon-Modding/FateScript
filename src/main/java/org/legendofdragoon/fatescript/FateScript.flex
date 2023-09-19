@@ -25,9 +25,13 @@ import static org.legendofdragoon.fatescript.psi.FateScriptTypes.*;
 WHITE_SPACE=[\ \t\f]+
 EOL=\n+
 COMMENT=;.*
-DEC=[0-9]+
+CMP=<=|<|>=|>|==|\!=|&|\!&
+SCOPE=:{2}
+LABELSIGNIFIER=:
+PARAMSEPARATOR=,
+DEC=[0-9]{1,10}
 ID=[a-zA-Z_][a-zA-Z_0-9]*
-HEX=0x[a-fA-F\d]+
+HEX=0x[a-fA-F\d]{1,8}
 PARAMSTORAGE=stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
 PARAMOTHEROTHERSTORAGE=stor[ \t\n\x0B\f\r]*?\[\s*?stor\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
 PARAMOTHERSTORAGEOFFSET=stor[ \t\n\x0B\f\r]*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?]
@@ -48,6 +52,10 @@ DATASTRING=str\[.*?]
   {WHITE_SPACE}                   { return WHITE_SPACE; }
   {EOL}                           { return EOL; }
   {COMMENT}                       { return COMMENT; }
+  {CMP}                           { return CMP; }
+  {SCOPE}                         { return SCOPE; }
+  {LABELSIGNIFIER}                { return LABELSIGNIFIER; }
+  {PARAMSEPARATOR}                { return PARAMSEPARATOR; }
   {DEC}                           { return DEC; }
   {ID}                            { return ID; }
   {HEX}                           { return HEX; }
