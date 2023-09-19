@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 public interface FateScriptParam extends PsiElement {
 
   @Nullable
-  FateScriptInline getInline();
+  FateScriptCmp getCmp();
 
   @Nullable
-  FateScriptJump getJump();
+  FateScriptInline getInline();
 
   @Nullable
   FateScriptMethodRef getMethodRef();
@@ -24,5 +24,8 @@ public interface FateScriptParam extends PsiElement {
 
   @Nullable
   FateScriptVar getVar();
+
+  @Nullable
+  PsiElement getId();
 
 }

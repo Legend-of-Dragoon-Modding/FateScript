@@ -7,7 +7,16 @@ import com.intellij.psi.PsiElement;
 
 public interface FateScriptInline extends PsiElement {
 
-  @NotNull
-  FateScriptInlineIndex getInlineIndex();
+  @Nullable
+  PsiElement getParaminline1();
+
+  @Nullable
+  PsiElement getParaminline2();
+
+  @Nullable
+  PsiElement getParaminline3();
+
+  @Nullable
+  PsiElement getParaminline6();
 
 }

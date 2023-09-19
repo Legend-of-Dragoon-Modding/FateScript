@@ -29,14 +29,14 @@ public class FateScriptParamImpl extends ASTWrapperPsiElement implements FateScr
 
   @Override
   @Nullable
-  public FateScriptInline getInline() {
-    return findChildByClass(FateScriptInline.class);
+  public FateScriptCmp getCmp() {
+    return findChildByClass(FateScriptCmp.class);
   }
 
   @Override
   @Nullable
-  public FateScriptJump getJump() {
-    return findChildByClass(FateScriptJump.class);
+  public FateScriptInline getInline() {
+    return findChildByClass(FateScriptInline.class);
   }
 
   @Override
@@ -61,6 +61,12 @@ public class FateScriptParamImpl extends ASTWrapperPsiElement implements FateScr
   @Nullable
   public FateScriptVar getVar() {
     return findChildByClass(FateScriptVar.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getId() {
+    return findChildByType(ID);
   }
 
 }

@@ -28,12 +28,6 @@ public class FateScriptCodeImpl extends ASTWrapperPsiElement implements FateScri
   }
 
   @Override
-  @Nullable
-  public FateScriptLineNumber getLineNumber() {
-    return findChildByClass(FateScriptLineNumber.class);
-  }
-
-  @Override
   @NotNull
   public FateScriptOp getOp() {
     return findNotNullChildByClass(FateScriptOp.class);

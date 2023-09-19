@@ -28,9 +28,27 @@ public class FateScriptInlineImpl extends ASTWrapperPsiElement implements FateSc
   }
 
   @Override
-  @NotNull
-  public FateScriptInlineIndex getInlineIndex() {
-    return findNotNullChildByClass(FateScriptInlineIndex.class);
+  @Nullable
+  public PsiElement getParaminline1() {
+    return findChildByType(PARAMINLINE1);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParaminline2() {
+    return findChildByType(PARAMINLINE2);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParaminline3() {
+    return findChildByType(PARAMINLINE3);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParaminline6() {
+    return findChildByType(PARAMINLINE6);
   }
 
 }

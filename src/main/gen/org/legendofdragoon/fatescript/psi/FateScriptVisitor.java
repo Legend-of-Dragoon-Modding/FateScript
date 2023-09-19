@@ -7,11 +7,19 @@ import com.intellij.psi.PsiElement;
 
 public class FateScriptVisitor extends PsiElementVisitor {
 
+  public void visitCmp(@NotNull FateScriptCmp o) {
+    visitPsiElement(o);
+  }
+
   public void visitCode(@NotNull FateScriptCode o) {
     visitPsiElement(o);
   }
 
-  public void visitIndex(@NotNull FateScriptIndex o) {
+  public void visitData(@NotNull FateScriptData o) {
+    visitPsiElement(o);
+  }
+
+  public void visitEntrypoint(@NotNull FateScriptEntrypoint o) {
     visitPsiElement(o);
   }
 
@@ -19,23 +27,11 @@ public class FateScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitInlineIndex(@NotNull FateScriptInlineIndex o) {
-    visitPsiElement(o);
-  }
-
-  public void visitJump(@NotNull FateScriptJump o) {
-    visitPsiElement(o);
-  }
-
-  public void visitJumpTable(@NotNull FateScriptJumpTable o) {
-    visitPsiElement(o);
-  }
-
   public void visitLabel(@NotNull FateScriptLabel o) {
     visitPsiElement(o);
   }
 
-  public void visitLineNumber(@NotNull FateScriptLineNumber o) {
+  public void visitLabelRef(@NotNull FateScriptLabelRef o) {
     visitPsiElement(o);
   }
 
@@ -59,7 +55,15 @@ public class FateScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitRel(@NotNull FateScriptRel o) {
+    visitPsiElement(o);
+  }
+
   public void visitStorage(@NotNull FateScriptStorage o) {
+    visitPsiElement(o);
+  }
+
+  public void visitStr(@NotNull FateScriptStr o) {
     visitPsiElement(o);
   }
 

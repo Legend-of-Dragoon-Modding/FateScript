@@ -11,6 +11,6 @@ public interface FateScriptNumber extends PsiElement {
   PsiElement getDec();
 
   @Nullable
-  PsiElement getFullhex();
+  PsiElement getHex();
 
 }

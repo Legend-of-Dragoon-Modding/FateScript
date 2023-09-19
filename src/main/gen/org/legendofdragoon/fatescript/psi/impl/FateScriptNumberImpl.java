@@ -35,8 +35,8 @@ public class FateScriptNumberImpl extends ASTWrapperPsiElement implements FateSc
 
   @Override
   @Nullable
-  public PsiElement getFullhex() {
-    return findChildByType(FULLHEX);
+  public PsiElement getHex() {
+    return findChildByType(HEX);
   }
 
 }

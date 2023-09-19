@@ -7,9 +7,6 @@ import com.intellij.psi.PsiElement;
 
 public interface FateScriptCode extends PsiElement {
 
-  @Nullable
-  FateScriptLineNumber getLineNumber();
-
   @NotNull
   FateScriptOp getOp();
 

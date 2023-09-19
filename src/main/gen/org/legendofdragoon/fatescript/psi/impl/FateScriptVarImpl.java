@@ -28,9 +28,39 @@ public class FateScriptVarImpl extends ASTWrapperPsiElement implements FateScrip
   }
 
   @Override
-  @NotNull
-  public List<FateScriptIndex> getIndexList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, FateScriptIndex.class);
+  @Nullable
+  public PsiElement getParamgamevar1() {
+    return findChildByType(PARAMGAMEVAR1);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamgamevar2() {
+    return findChildByType(PARAMGAMEVAR2);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamgamevararray1() {
+    return findChildByType(PARAMGAMEVARARRAY1);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamgamevararray2() {
+    return findChildByType(PARAMGAMEVARARRAY2);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamgamevararray3() {
+    return findChildByType(PARAMGAMEVARARRAY3);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamgamevararray4() {
+    return findChildByType(PARAMGAMEVARARRAY4);
   }
 
 }

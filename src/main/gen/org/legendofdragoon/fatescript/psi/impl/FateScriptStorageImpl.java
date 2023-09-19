@@ -28,9 +28,21 @@ public class FateScriptStorageImpl extends ASTWrapperPsiElement implements FateS
   }
 
   @Override
-  @NotNull
-  public FateScriptIndex getIndex() {
-    return findNotNullChildByClass(FateScriptIndex.class);
+  @Nullable
+  public PsiElement getParamotherotherstorage() {
+    return findChildByType(PARAMOTHEROTHERSTORAGE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamotherstorageoffset() {
+    return findChildByType(PARAMOTHERSTORAGEOFFSET);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getParamstorage() {
+    return findChildByType(PARAMSTORAGE);
   }
 
 }

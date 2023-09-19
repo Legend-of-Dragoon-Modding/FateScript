@@ -36,28 +36,39 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // lineNumber? op !":"
-  public static boolean code(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "code")) return false;
+  // "<=" | "<" | "==" | "!=" | ">" | ">=" | "&" | "!&"
+  public static boolean cmp(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "cmp")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CODE, "<code>");
-    r = code_0(b, l + 1);
-    r = r && op(b, l + 1);
-    r = r && code_2(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, CMP, "<cmp>");
+    r = consumeToken(b, "<=");
+    if (!r) r = consumeToken(b, "<");
+    if (!r) r = consumeToken(b, "==");
+    if (!r) r = consumeToken(b, "!=");
+    if (!r) r = consumeToken(b, ">");
+    if (!r) r = consumeToken(b, ">=");
+    if (!r) r = consumeToken(b, "&");
+    if (!r) r = consumeToken(b, "!&");
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // lineNumber?
-  private static boolean code_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "code_0")) return false;
-    lineNumber(b, l + 1);
-    return true;
+  /* ********************************************************** */
+  // op !":"
+  public static boolean code(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "code")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = op(b, l + 1);
+    r = r && code_1(b, l + 1);
+    exit_section_(b, m, CODE, r);
+    return r;
   }
 
   // !":"
-  private static boolean code_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "code_2")) return false;
+  private static boolean code_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "code_1")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NOT_);
     r = !consumeToken(b, ":");
@@ -66,127 +77,49 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "[" (dec | storage "," dec | storage | jumpTable) ("+" dec)? "]"
-  public static boolean index(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "index")) return false;
+  // "data" (number | str)
+  public static boolean data(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "data")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, INDEX, "<index>");
-    r = consumeToken(b, "[");
-    r = r && index_1(b, l + 1);
-    r = r && index_2(b, l + 1);
-    r = r && consumeToken(b, "]");
+    Marker m = enter_section_(b, l, _NONE_, DATA, "<data>");
+    r = consumeToken(b, "data");
+    r = r && data_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // dec | storage "," dec | storage | jumpTable
-  private static boolean index_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "index_1")) return false;
+  // number | str
+  private static boolean data_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "data_1")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, DEC);
-    if (!r) r = index_1_1(b, l + 1);
-    if (!r) r = storage(b, l + 1);
-    if (!r) r = jumpTable(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // storage "," dec
-  private static boolean index_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "index_1_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = storage(b, l + 1);
-    r = r && consumeToken(b, ",");
-    r = r && consumeToken(b, DEC);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // ("+" dec)?
-  private static boolean index_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "index_2")) return false;
-    index_2_0(b, l + 1);
-    return true;
-  }
-
-  // "+" dec
-  private static boolean index_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "index_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, "+");
-    r = r && consumeToken(b, DEC);
-    exit_section_(b, m, null, r);
+    r = number(b, l + 1);
+    if (!r) r = str(b, l + 1);
     return r;
   }
 
   /* ********************************************************** */
-  // "inl" inlineIndex
+  // "entrypoint" labelRef
+  public static boolean entrypoint(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "entrypoint")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, ENTRYPOINT, "<entrypoint>");
+    r = consumeToken(b, "entrypoint");
+    r = r && labelRef(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // paraminline1 | paraminline2 | paraminline3 | paraminline6
   public static boolean inline(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inline")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, INLINE, "<inline>");
-    r = consumeToken(b, "inl");
-    r = r && inlineIndex(b, l + 1);
+    r = consumeToken(b, PARAMINLINE1);
+    if (!r) r = consumeToken(b, PARAMINLINE2);
+    if (!r) r = consumeToken(b, PARAMINLINE3);
+    if (!r) r = consumeToken(b, PARAMINLINE6);
     exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // "[" (inlineIndex | jumpTable | jump) "]"
-  public static boolean inlineIndex(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "inlineIndex")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, INLINE_INDEX, "<inline index>");
-    r = consumeToken(b, "[");
-    r = r && inlineIndex_1(b, l + 1);
-    r = r && consumeToken(b, "]");
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // inlineIndex | jumpTable | jump
-  private static boolean inlineIndex_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "inlineIndex_1")) return false;
-    boolean r;
-    r = inlineIndex(b, l + 1);
-    if (!r) r = jumpTable(b, l + 1);
-    if (!r) r = jump(b, l + 1);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // ":" id
-  public static boolean jump(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jump")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, JUMP, "<jump>");
-    r = consumeToken(b, ":");
-    r = r && consumeToken(b, ID);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // jump (jumpTable | index)
-  public static boolean jumpTable(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jumpTable")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, JUMP_TABLE, "<jump table>");
-    r = jump(b, l + 1);
-    r = r && jumpTable_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // jumpTable | index
-  private static boolean jumpTable_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jumpTable_1")) return false;
-    boolean r;
-    r = jumpTable(b, l + 1);
-    if (!r) r = index(b, l + 1);
     return r;
   }
 
@@ -204,7 +137,19 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !<<eof>> (code | label)? eol+
+  // ":" id
+  public static boolean labelRef(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "labelRef")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, LABEL_REF, "<label ref>");
+    r = consumeToken(b, ":");
+    r = r && consumeToken(b, ID);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // !<<eof>> (data | rel | entrypoint | code | label)? eol+
   static boolean line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "line")) return false;
     boolean r, p;
@@ -227,18 +172,21 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (code | label)?
+  // (data | rel | entrypoint | code | label)?
   private static boolean line_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "line_1")) return false;
     line_1_0(b, l + 1);
     return true;
   }
 
-  // code | label
+  // data | rel | entrypoint | code | label
   private static boolean line_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "line_1_0")) return false;
     boolean r;
-    r = code(b, l + 1);
+    r = data(b, l + 1);
+    if (!r) r = rel(b, l + 1);
+    if (!r) r = entrypoint(b, l + 1);
+    if (!r) r = code(b, l + 1);
     if (!r) r = label(b, l + 1);
     return r;
   }
@@ -259,19 +207,6 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // dec | hex
-  public static boolean lineNumber(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "lineNumber")) return false;
-    if (!nextTokenIs(b, "<line number>", DEC, HEX)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, LINE_NUMBER, "<line number>");
-    r = consumeToken(b, DEC);
-    if (!r) r = consumeToken(b, HEX);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
   // id "::" id
   public static boolean methodRef(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "methodRef")) return false;
@@ -286,14 +221,14 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // dec | fullhex
+  // dec | hex
   public static boolean number(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "number")) return false;
-    if (!nextTokenIs(b, "<number>", DEC, FULLHEX)) return false;
+    if (!nextTokenIs(b, "<number>", DEC, HEX)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, NUMBER, "<number>");
     r = consumeToken(b, DEC);
-    if (!r) r = consumeToken(b, FULLHEX);
+    if (!r) r = consumeToken(b, HEX);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -319,7 +254,7 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // methodRef | number | inline | jump | var | storage
+  // methodRef | number | inline | var | storage | cmp | id
   public static boolean param(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "param")) return false;
     boolean r;
@@ -327,9 +262,10 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
     r = methodRef(b, l + 1);
     if (!r) r = number(b, l + 1);
     if (!r) r = inline(b, l + 1);
-    if (!r) r = jump(b, l + 1);
     if (!r) r = var(b, l + 1);
     if (!r) r = storage(b, l + 1);
+    if (!r) r = cmp(b, l + 1);
+    if (!r) r = consumeToken(b, ID);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -380,6 +316,18 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // "rel" labelRef
+  public static boolean rel(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "rel")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, REL, "<rel>");
+    r = consumeToken(b, "rel");
+    r = r && labelRef(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // line *
   static boolean root(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "root")) return false;
@@ -392,41 +340,43 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "stor" index
+  // paramstorage | paramotherotherstorage | paramotherstorageoffset
   public static boolean storage(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "storage")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STORAGE, "<storage>");
-    r = consumeToken(b, "stor");
-    r = r && index(b, l + 1);
+    r = consumeToken(b, PARAMSTORAGE);
+    if (!r) r = consumeToken(b, PARAMOTHEROTHERSTORAGE);
+    if (!r) r = consumeToken(b, PARAMOTHERSTORAGEOFFSET);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // "var" index+
-  public static boolean var(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "var")) return false;
+  // "str[" "]"
+  public static boolean str(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "str")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, VAR, "<var>");
-    r = consumeToken(b, "var");
-    r = r && var_1(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, STR, "<str>");
+    r = consumeToken(b, "str[");
+    r = r && consumeToken(b, "]");
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // index+
-  private static boolean var_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "var_1")) return false;
+  /* ********************************************************** */
+  // paramgamevar1 | paramgamevar2 | paramgamevararray1 | paramgamevararray2 | paramgamevararray3 | paramgamevararray4
+  public static boolean var(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "var")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = index(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!index(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "var_1", c)) break;
-    }
-    exit_section_(b, m, null, r);
+    Marker m = enter_section_(b, l, _NONE_, VAR, "<var>");
+    r = consumeToken(b, PARAMGAMEVAR1);
+    if (!r) r = consumeToken(b, PARAMGAMEVAR2);
+    if (!r) r = consumeToken(b, PARAMGAMEVARARRAY1);
+    if (!r) r = consumeToken(b, PARAMGAMEVARARRAY2);
+    if (!r) r = consumeToken(b, PARAMGAMEVARARRAY3);
+    if (!r) r = consumeToken(b, PARAMGAMEVARARRAY4);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

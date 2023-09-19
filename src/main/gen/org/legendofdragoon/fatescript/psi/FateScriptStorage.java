@@ -7,7 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface FateScriptStorage extends PsiElement {
 
-  @NotNull
-  FateScriptIndex getIndex();
+  @Nullable
+  PsiElement getParamotherotherstorage();
+
+  @Nullable
+  PsiElement getParamotherstorageoffset();
+
+  @Nullable
+  PsiElement getParamstorage();
 
 }
