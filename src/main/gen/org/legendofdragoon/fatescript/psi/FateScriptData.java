@@ -11,6 +11,6 @@ public interface FateScriptData extends PsiElement {
   FateScriptNumber getNumber();
 
   @Nullable
-  FateScriptStr getStr();
+  PsiElement getDatastring();
 
 }

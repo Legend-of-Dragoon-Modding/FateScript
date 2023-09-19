@@ -63,10 +63,6 @@ public class FateScriptVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitStr(@NotNull FateScriptStr o) {
-    visitPsiElement(o);
-  }
-
   public void visitVar(@NotNull FateScriptVar o) {
     visitPsiElement(o);
   }

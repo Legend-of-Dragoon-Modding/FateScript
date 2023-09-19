@@ -22,10 +22,10 @@ public interface FateScriptTypes {
   IElementType PARAMS = new FateScriptElementType("PARAMS");
   IElementType REL = new FateScriptElementType("REL");
   IElementType STORAGE = new FateScriptElementType("STORAGE");
-  IElementType STR = new FateScriptElementType("STR");
   IElementType VAR = new FateScriptElementType("VAR");
 
   IElementType COMMENT = new FateScriptTokenType("comment");
+  IElementType DATASTRING = new FateScriptTokenType("datastring");
   IElementType DEC = new FateScriptTokenType("dec");
   IElementType EOL = new FateScriptTokenType("eol");
   IElementType HEX = new FateScriptTokenType("hex");
@@ -88,9 +88,6 @@ public interface FateScriptTypes {
       }
       else if (type == STORAGE) {
         return new FateScriptStorageImpl(node);
-      }
-      else if (type == STR) {
-        return new FateScriptStrImpl(node);
       }
       else if (type == VAR) {
         return new FateScriptVarImpl(node);

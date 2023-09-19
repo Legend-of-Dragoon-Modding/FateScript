@@ -22,10 +22,7 @@ import static org.legendofdragoon.fatescript.psi.FateScriptTypes.*;
 %type IElementType
 %unicode
 
-EOL="\r"|"\n"|"\r\n"
-LINE_WS=[\ \t\f]
-WHITE_SPACE=({LINE_WS})+
-
+WHITE_SPACE=[\ \t\f]+
 EOL=\n+
 COMMENT=;.*
 DEC=[0-9]+
@@ -44,12 +41,11 @@ PARAMINLINE3=inl[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10}|:[a-zA-Z_0
 PARAMGAMEVARARRAY3=var[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
 PARAMGAMEVARARRAY4=var[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
 PARAMINLINE6=inl[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10}|:[a-zA-Z_0-9]+)[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?inl[ \t\n\x0B\f\r]*?\[(0x[a-fA-F\d]{1,8}|[0-9]{1,10}|:[a-zA-Z_0-9]+)[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?]
+DATASTRING=str\[.*?]
 
 %%
 <YYINITIAL> {
   {WHITE_SPACE}                   { return WHITE_SPACE; }
-
-
   {EOL}                           { return EOL; }
   {COMMENT}                       { return COMMENT; }
   {DEC}                           { return DEC; }
@@ -68,7 +64,7 @@ PARAMINLINE6=inl[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10}|:[a-zA-Z_0
   {PARAMGAMEVARARRAY3}            { return PARAMGAMEVARARRAY3; }
   {PARAMGAMEVARARRAY4}            { return PARAMGAMEVARARRAY4; }
   {PARAMINLINE6}                  { return PARAMINLINE6; }
-
+  {DATASTRING}                    { return DATASTRING; }
 }
 
 [^] { return BAD_CHARACTER; }

@@ -35,8 +35,8 @@ public class FateScriptDataImpl extends ASTWrapperPsiElement implements FateScri
 
   @Override
   @Nullable
-  public FateScriptStr getStr() {
-    return findChildByClass(FateScriptStr.class);
+  public PsiElement getDatastring() {
+    return findChildByType(DATASTRING);
   }
 
 }

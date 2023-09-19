@@ -36,17 +36,17 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "<=" | "<" | "==" | "!=" | ">" | ">=" | "&" | "!&"
+  // "<=" | ">=" |  "<" | "==" | "!=" | ">" |"&" | "!&"
   public static boolean cmp(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "cmp")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, CMP, "<cmp>");
     r = consumeToken(b, "<=");
+    if (!r) r = consumeToken(b, ">=");
     if (!r) r = consumeToken(b, "<");
     if (!r) r = consumeToken(b, "==");
     if (!r) r = consumeToken(b, "!=");
     if (!r) r = consumeToken(b, ">");
-    if (!r) r = consumeToken(b, ">=");
     if (!r) r = consumeToken(b, "&");
     if (!r) r = consumeToken(b, "!&");
     exit_section_(b, l, m, r, false, null);
@@ -77,7 +77,7 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "data" (number | str)
+  // "data" (number | datastring)
   public static boolean data(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "data")) return false;
     boolean r;
@@ -88,12 +88,12 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // number | str
+  // number | datastring
   private static boolean data_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "data_1")) return false;
     boolean r;
     r = number(b, l + 1);
-    if (!r) r = str(b, l + 1);
+    if (!r) r = consumeToken(b, DATASTRING);
     return r;
   }
 
@@ -348,18 +348,6 @@ public class FateScriptParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, PARAMSTORAGE);
     if (!r) r = consumeToken(b, PARAMOTHEROTHERSTORAGE);
     if (!r) r = consumeToken(b, PARAMOTHERSTORAGEOFFSET);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // "str[" "]"
-  public static boolean str(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "str")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, STR, "<str>");
-    r = consumeToken(b, "str[");
-    r = r && consumeToken(b, "]");
     exit_section_(b, l, m, r, false, null);
     return r;
   }

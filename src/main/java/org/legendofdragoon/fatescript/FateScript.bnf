@@ -57,4 +57,4 @@ number ::= dec | hex
 inline ::= paraminline1 | paraminline2 | paraminline3 | paraminline6
 var ::= paramgamevar1 | paramgamevar2 | paramgamevararray1 | paramgamevararray2 | paramgamevararray3 | paramgamevararray4
 storage ::= paramstorage | paramotherotherstorage | paramotherstorageoffset
-cmp ::= "<=" | "<" | "==" | "!=" | ">" | ">=" | "&" | "!&"
+cmp ::= "<=" | ">=" |  "<" | "==" | "!=" | ">" |"&" | "!&"
