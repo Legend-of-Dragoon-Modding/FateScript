@@ -17,7 +17,12 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
           createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
   public static final TextAttributesKey OP =
           createTextAttributesKey("FATESCRIPT_OP", DefaultLanguageHighlighterColors.FUNCTION_CALL);
-
+  public static final TextAttributesKey RETURN =
+          createTextAttributesKey("FATESCRIPT_RETURN", DefaultLanguageHighlighterColors.KEYWORD);
+  public static final TextAttributesKey YIELD =
+          createTextAttributesKey("FATESCRIPT_YIELD", DefaultLanguageHighlighterColors.KEYWORD);
+  public static final TextAttributesKey KEYWORD =
+          createTextAttributesKey("FATESCRIPT_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
   public static final TextAttributesKey DATASTRING =
           createTextAttributesKey("FATESCRIPT_DATASTRING", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
@@ -30,6 +35,7 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
   private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
   private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
   private static final TextAttributesKey[] OP_KEYS = new TextAttributesKey[]{OP};
+  private static final TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{KEYWORD};
   private static final TextAttributesKey[] DATASTRING_KEYS = new TextAttributesKey[]{DATASTRING};
   private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
@@ -48,6 +54,9 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     }
     if (tokenType.equals(FateScriptTypes.OP)) {
       return OP_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.KEYWORD)) {
+      return KEYWORD_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.DATASTRING)) {
       return DATASTRING_KEYS;

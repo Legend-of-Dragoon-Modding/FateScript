@@ -41,6 +41,9 @@ DATASTRING=str\[.*?]
 <YYINITIAL> {
   {EOL}                  { return EOL; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
+
+  "return"               { return RETURN; }
+  "yield"                { return YIELD; }
   {COMMENT}              { return COMMENT; }
   {CMP}                  { return CMP; }
   {SCOPE}                { return SCOPE; }

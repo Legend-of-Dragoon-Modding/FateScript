@@ -19,6 +19,8 @@ public class FateScriptColorSettingsPage implements ColorSettingsPage {
           new AttributesDescriptor("Op", FateScriptSyntaxHighlighter.OP),
           new AttributesDescriptor("Datastring", FateScriptSyntaxHighlighter.DATASTRING),
           new AttributesDescriptor("Comment", FateScriptSyntaxHighlighter.COMMENT),
+          new AttributesDescriptor("Keyword", FateScriptSyntaxHighlighter.KEYWORD),
+          //new AttributesDescriptor("Keywords//Yield", FateScriptSyntaxHighlighter.YIELD),
           new AttributesDescriptor("Bad value", FateScriptSyntaxHighlighter.BAD_CHARACTER)
   };
 
