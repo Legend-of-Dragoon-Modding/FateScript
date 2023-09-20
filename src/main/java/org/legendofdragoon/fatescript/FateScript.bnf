@@ -14,6 +14,7 @@
 
   tokens=[
     eol='regexp:\n+'
+    whitespace='regexp:\s+'
     comment='regexp:;.*'
     cmp='regexp:<=|<|>=|>|==|!=|&|!&'
     scope='regexp:::'

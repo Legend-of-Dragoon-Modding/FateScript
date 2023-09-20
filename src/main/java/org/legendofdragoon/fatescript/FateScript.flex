@@ -24,7 +24,6 @@ import static org.legendofdragoon.fatescript.psi.FateScriptTypes.*;
 
 EOL=\n+
 WHITE_SPACE=\s+
-
 COMMENT=;.*
 CMP=<=|<|>=|>|==|\!=|&|\!&
 SCOPE=::
@@ -42,8 +41,6 @@ DATASTRING=str\[.*?]
 <YYINITIAL> {
   {EOL}                  { return EOL; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
-
-
   {COMMENT}              { return COMMENT; }
   {CMP}                  { return CMP; }
   {SCOPE}                { return SCOPE; }
