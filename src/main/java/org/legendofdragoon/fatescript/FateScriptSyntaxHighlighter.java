@@ -14,7 +14,7 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
   public static final TextAttributesKey NUMBER =
-          createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.KEYWORD);
+          createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
   public static final TextAttributesKey OP =
           createTextAttributesKey("FATESCRIPT_OP", DefaultLanguageHighlighterColors.FUNCTION_CALL);
 
@@ -43,7 +43,7 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     if (tokenType.equals(FateScriptTypes.COMMENT)) {
       return COMMENT_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.NUMBER)) {
+    if (tokenType.equals(FateScriptTypes.DEC) || tokenType.equals(FateScriptTypes.HEX)) {
       return NUMBER_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.OP)) {

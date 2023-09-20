@@ -40,5 +40,7 @@
     <lang.syntaxHighlighterFactory
             language="fatescript"
             implementationClass="org.legendofdragoon.fatescript.FateScriptSyntaxHighlighterFactory"/>
+    <colorSettingsPage
+            implementation="org.legendofdragoon.fatescript.FateScriptColorSettingsPage"/>
   </extensions>
 </idea-plugin>
