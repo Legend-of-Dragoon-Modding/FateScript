@@ -14,7 +14,6 @@
 
   tokens=[
     eol='regexp:\n+'
-    space='regexp:\s+'
     comment='regexp:;.*'
     cmp='regexp:<=|<|>=|>|==|!=|&|!&'
     scope='regexp:::'
@@ -26,16 +25,6 @@
     id='regexp:[a-zA-Z_]\w*'
     dec='regexp:\d{1,10}'
     hex='regexp:0x[a-fA-F\d]{1,8}'
-    paramgamevar1='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
-    paramgamevar2='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
-    paramgamevararray1='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
-    paramgamevararray2='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
-    paraminline1='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?]'
-    paraminline2='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?]'
-    paraminline3='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?]\s*?]'
-    paramgamevararray3='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
-    paramgamevararray4='regexp:var\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?\s*?\+\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]'
-    paraminline6='regexp:inl\s*?\[\s*?(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\+\s*?inl\s*?\[(0x[a-fA-F\d]{1,8}|\d{1,10}|:\w+)\s*?\+\s*?(0x[a-fA-F\d]{1,8}|\d{1,10})\s*?]\s*?]'
     datastring='regexp:str\[.*?]'
   ]
 
@@ -49,7 +38,7 @@ line ::= !<<eof>> (data | rel | entrypoint | code | label)? eol+ {pin=2}
 entrypoint ::= "entrypoint" labelRef
 rel ::= "rel" labelRef
 data ::= "data" (number | datastring)
-labelRef ::= labelsignifier id
+labelRef ::= labelsignifier id (bracketopen (labelRef |  number | storage) (binop (number | storage))? bracketclose)?
 code ::= op !labelsignifier
 label ::= id labelsignifier
 op ::= id params?
@@ -57,6 +46,6 @@ params ::= param ((separator param)+)?
 param ::= methodRef | number | inline | var | storage | cmp | id
 methodRef ::= id scope id
 number ::= dec | hex
-inline ::= paraminline1 | paraminline2 | paraminline3 | paraminline6
-var ::= paramgamevar1 | paramgamevar2 | paramgamevararray1 | paramgamevararray2 | paramgamevararray3 | paramgamevararray4
+inline ::= "inl" bracketopen ((bracketopen storage bracketclose) | labelRef) (binop (inline | number | storage))? bracketclose
+var ::= "var" bracketopen number (binop storage)? bracketclose (bracketopen (number | storage) bracketclose)?
 storage ::= "stor" bracketopen (number | storage) (separator number)? (binop storage)? bracketclose
