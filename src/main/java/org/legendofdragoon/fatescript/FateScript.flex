@@ -28,13 +28,13 @@ COMMENT=;.*
 CMP=<=|<|>=|>|==|\!=|&|\!&
 SCOPE=:{2}
 LABELSIGNIFIER=:
-PARAMSEPARATOR=,
+SEPARATOR=,
+BRACKETOPEN=\[
+BRACKETCLOSE=]
+BINOP=[+\-*/]
 DEC=[0-9]{1,10}
 ID=[a-zA-Z_][a-zA-Z_0-9]*
 HEX=0x[a-fA-F\d]{1,8}
-PARAMSTORAGE=stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
-PARAMOTHEROTHERSTORAGE=stor[ \t\n\x0B\f\r]*?\[\s*?stor\s*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
-PARAMOTHERSTORAGEOFFSET=stor[ \t\n\x0B\f\r]*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?,[ \t\n\x0B\f\r]*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?]
 PARAMGAMEVAR1=var[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?]
 PARAMGAMEVAR2=var[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?\+[ \t\n\x0B\f\r]*?stor[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?]
 PARAMGAMEVARARRAY1=var[ \t\n\x0B\f\r]*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?\[\s*?stor\s*?\[\s*?(0x[a-fA-F\d]{1,8}|[0-9]{1,10})[ \t\n\x0B\f\r]*?][ \t\n\x0B\f\r]*?]
@@ -55,13 +55,13 @@ DATASTRING=str\[.*?]
   {CMP}                           { return CMP; }
   {SCOPE}                         { return SCOPE; }
   {LABELSIGNIFIER}                { return LABELSIGNIFIER; }
-  {PARAMSEPARATOR}                { return PARAMSEPARATOR; }
+  {SEPARATOR}                     { return SEPARATOR; }
+  {BRACKETOPEN}                   { return BRACKETOPEN; }
+  {BRACKETCLOSE}                  { return BRACKETCLOSE; }
+  {BINOP}                         { return BINOP; }
   {DEC}                           { return DEC; }
   {ID}                            { return ID; }
   {HEX}                           { return HEX; }
-  {PARAMSTORAGE}                  { return PARAMSTORAGE; }
-  {PARAMOTHEROTHERSTORAGE}        { return PARAMOTHEROTHERSTORAGE; }
-  {PARAMOTHERSTORAGEOFFSET}       { return PARAMOTHERSTORAGEOFFSET; }
   {PARAMGAMEVAR1}                 { return PARAMGAMEVAR1; }
   {PARAMGAMEVAR2}                 { return PARAMGAMEVAR2; }
   {PARAMGAMEVARARRAY1}            { return PARAMGAMEVARARRAY1; }
