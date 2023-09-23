@@ -14,29 +14,28 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
   public static final TextAttributesKey NUMBER =
-          createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
-  public static final TextAttributesKey OP =
-          createTextAttributesKey("FATESCRIPT_OP", DefaultLanguageHighlighterColors.FUNCTION_CALL);
-  public static final TextAttributesKey RETURN =
-          createTextAttributesKey("FATESCRIPT_RETURN", DefaultLanguageHighlighterColors.KEYWORD);
-  public static final TextAttributesKey YIELD =
-          createTextAttributesKey("FATESCRIPT_YIELD", DefaultLanguageHighlighterColors.KEYWORD);
-  public static final TextAttributesKey KEYWORD =
-          createTextAttributesKey("FATESCRIPT_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
-  public static final TextAttributesKey DATASTRING =
-          createTextAttributesKey("FATESCRIPT_DATASTRING", DefaultLanguageHighlighterColors.STRING);
+      createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
+  public static final TextAttributesKey DATATYPE =
+      createTextAttributesKey("FATESCRIPT_DATATYPE", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
+    public static final TextAttributesKey METHOD =
+      createTextAttributesKey("FATESCRIPT_METHOD", DefaultLanguageHighlighterColors.STATIC_METHOD);
+  public static final TextAttributesKey KEYWORD_OPS =
+      createTextAttributesKey("FATESCRIPT_KEYWORD_OPS", DefaultLanguageHighlighterColors.KEYWORD);
+  public static final TextAttributesKey STRING =
+      createTextAttributesKey("FATESCRIPT_STRING", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
-          createTextAttributesKey("FATESCRIPT_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+      createTextAttributesKey("FATESCRIPT_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
   public static final TextAttributesKey BAD_CHARACTER =
-          createTextAttributesKey("FATESCRIPT_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
+      createTextAttributesKey("FATESCRIPT_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
 
   private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
+  private static final TextAttributesKey[] DATATYPE_KEYS = new TextAttributesKey[]{DATATYPE};
   private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
   private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
-  private static final TextAttributesKey[] OP_KEYS = new TextAttributesKey[]{OP};
-  private static final TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{KEYWORD};
-  private static final TextAttributesKey[] DATASTRING_KEYS = new TextAttributesKey[]{DATASTRING};
+  private static final TextAttributesKey[] METHOD_KEYS = new TextAttributesKey[]{METHOD};
+  private static final TextAttributesKey[] KEYWORD_OPS_KEYS = new TextAttributesKey[]{KEYWORD_OPS};
+  private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
   private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
   @Override
@@ -52,14 +51,21 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     if (tokenType.equals(FateScriptTypes.DEC) || tokenType.equals(FateScriptTypes.HEX)) {
       return NUMBER_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.OP)) {
-      return OP_KEYS;
+    if (
+        tokenType.equals(FateScriptTypes.ENTRYPOINT) ||
+            tokenType.equals(FateScriptTypes.REL) ||
+            tokenType.equals(FateScriptTypes.DATA)
+    ) {
+      return DATATYPE_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.KEYWORD)) {
-      return KEYWORD_KEYS;
+    if (tokenType.equals(FateScriptTypes.METHOD)) {
+      return METHOD_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.DATASTRING)) {
-      return DATASTRING_KEYS;
+    if (tokenType.equals(FateScriptTypes.KEYWORD_OPS)) {
+      return KEYWORD_OPS_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.STRING)) {
+      return STRING_KEYS;
     }
     if (tokenType.equals(TokenType.BAD_CHARACTER)) {
       return BAD_CHAR_KEYS;

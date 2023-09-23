@@ -7,7 +7,6 @@ import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Map;
@@ -16,11 +15,9 @@ public class FateScriptColorSettingsPage implements ColorSettingsPage {
 
   private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
           new AttributesDescriptor("Number", FateScriptSyntaxHighlighter.NUMBER),
-          new AttributesDescriptor("Op", FateScriptSyntaxHighlighter.OP),
-          new AttributesDescriptor("Datastring", FateScriptSyntaxHighlighter.DATASTRING),
+          new AttributesDescriptor("String", FateScriptSyntaxHighlighter.STRING),
           new AttributesDescriptor("Comment", FateScriptSyntaxHighlighter.COMMENT),
-          new AttributesDescriptor("Keyword", FateScriptSyntaxHighlighter.KEYWORD),
-          //new AttributesDescriptor("Keywords//Yield", FateScriptSyntaxHighlighter.YIELD),
+          new AttributesDescriptor("Ops//Keyword", FateScriptSyntaxHighlighter.KEYWORD_OPS),
           new AttributesDescriptor("Bad value", FateScriptSyntaxHighlighter.BAD_CHARACTER)
   };
 
@@ -53,6 +50,7 @@ public class FateScriptColorSettingsPage implements ColorSettingsPage {
             call Bttl_800f::scriptCheckPhysicalHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
             jmp inl[:LABEL_765] ; addr
             LABEL_764:
+            yield
             call Bttl_800f::scriptCheckSpellOrStatusHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
             LABEL_765:
             jmp_cmp ==, 0, stor[9], inl[:LABEL_766] ; operand, right, addr

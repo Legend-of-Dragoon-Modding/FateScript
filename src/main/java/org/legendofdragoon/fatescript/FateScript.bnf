@@ -1,5 +1,6 @@
 {
   parserClass="org.legendofdragoon.fatescript.psi.FateScriptParser"
+  parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -15,39 +16,127 @@
   tokens=[
     eol='regexp:\n+'
     whitespace='regexp:\s+'
+    
+    // Keyword ops
+    yield='yield'
+    return='return'
+    rewind='rewind'
+
+    // Loop ops
+    while='while'
+
+    // Wait ops
+    wait='wait'
+    wait_cmp='wait_cmp'
+
+    // Logical ops
+    and='and'
+    or='or'
+    xor='xor'
+    andor='andor'
+    not='not'
+
+    // Math ops
+    shl='shl'
+    shr='shr'
+    add='add'
+    sub='sub'
+    sub_rev='sub_rev'
+    incr='incr'
+    decr='decr'
+    neg='neg'
+    abs='abs'
+    mul='mul'
+    div='div'
+    div_rev='div_rev'
+    mod='mod'
+    mod_rev='mod_rev'
+    mul_12='mul_12'
+    div_12='div_12'
+    div_12_rev='div_12_rev'
+    sqrt='sqrt'
+    rand='rand'
+    sin_12='sin_12'
+    cos_12='cos_12'
+    atan2_12='atan2_12'
+
+    // Jump ops
+    jmp='jmp'
+    jmp_table='jmp_table'
+
+    // Gosub ops
+    gosub='gosub'
+    gosub_table='gosub_table'
+
+    // Script ops
+    consume='consume'
+    deallocate='deallocate'
+    deallocate_other='deallocate_other'
+    fork='fork'
+    fork_reenter='fork_reenter'
+
+    // Other ops
+    call='call'
+    mov='mov'
+    memcpy='memcpy'
+
+    // Useless ops
+    swap_broken='swap_broken'
+    depth='depth'
+    noop='noop'
+
+    // Datatypes
+    entrypoint='entrypoint'
+    data='data'
+    rel='rel'
+
+    // Subscriptable params
+    inl='inl'
+    var='var'
+    stor='stor'
+    str='str'
+
     comment='regexp:;.*'
     cmp='regexp:<=|<|>=|>|==|!=|&|!&'
-    scope='regexp:::'
-    labelsignifier='regexp::'
-    separator='regexp:,'
-    bracketopen='regexp:\['
-    bracketclose='regexp:]'
     binop='regexp:[+\-*/]'
     id='regexp:[a-zA-Z_]\w*'
+    method='regexp:[a-zA-Z_]\w*'
     dec='regexp:\d{1,10}'
     hex='regexp:0x[a-fA-F\d]{1,8}'
-    datastring='regexp:str\[.*?]'
+    string='regexp:\[.*]'
   ]
 
-//  name(".*expr")='expression'
-//  extends(".*expr")=expr
+  //name(".*expr")='expression'
+  //extends(".*expr")=expr
 }
 
 root ::= line*
-line ::= !<<eof>> (data | rel | entrypoint | code | label)? eol+ {pin=2}
+line ::= !<<eof>> (dataRef | relativeJump | entry | code | label)? (<<eof>> | eol+) {pin=2 recoverWhile=lineRecover}
+private lineRecover ::= !line
 
-entrypoint ::= "entrypoint" labelRef
-rel ::= "rel" labelRef
-data ::= "data" (number | datastring)
-labelRef ::= labelsignifier id (bracketopen (labelRef |  number | storage) (binop (number | storage))? bracketclose)?
-code ::= (keyword | op) !labelsignifier
-label ::= id labelsignifier
-op ::= id params?
-params ::= param ((separator param)+)?
-param ::= methodRef | number | inline | var | storage | cmp | id
-methodRef ::= id scope id
+labelRef ::= colon id (lbracket (labelRef |  number | storage) (binop (number | storage))? rbracket)?
+code ::= op !colon
+label ::= id colon
+op ::= (keywordOps | while | waitOps | logicalOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps) params?
+params ::= param ((comma param)+)?
+param ::= methodRef | number | inline | gameVar | storage | cmp | id
+methodRef ::= id doublecolon method
+
+inline ::= inl lbracket ((lbracket storage rbracket) | labelRef) (binop (inline | number | storage))? rbracket
+gameVar ::= var lbracket number (binop (storage | number))? rbracket (lbracket (number | storage) rbracket)?
+storage ::= stor lbracket (number | storage) (comma number)? (binop storage)? rbracket
+
+entry ::= entrypoint labelRef
+relativeJump ::= rel labelRef
+dataRef ::= data (number | (str string))
+
+keywordOps ::= return | yield | rewind
+waitOps ::= wait | wait_cmp
+logicalOps ::= and | or | xor | andor | not
+mathOps ::= shl | shr | add | sub | sub_rev | incr | decr | neg | abs | mul | div | div_rev | mod | mod_rev | mul_12 | div_12 | div_12_rev | sqrt | rand | sin_12 | cos_12 | atan2_12
+jumpOps ::= jmp | jmp_table
+gosubOps ::= gosub | gosub_table
+scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
+otherOps ::= call | move | memcpy
+uselessOps ::= swap_broken | depth | noop
 number ::= dec | hex
-inline ::= "inl" bracketopen ((bracketopen storage bracketclose) | labelRef) (binop (inline | number | storage))? bracketclose
-var ::= "var" bracketopen number (binop storage)? bracketclose (bracketopen (number | storage) bracketclose)?
-storage ::= "stor" bracketopen (number | storage) (separator number)? (binop storage)? bracketclose
-keyword ::= return | yield
