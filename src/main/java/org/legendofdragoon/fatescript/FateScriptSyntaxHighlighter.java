@@ -15,6 +15,8 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
   public static final TextAttributesKey NUMBER =
       createTextAttributesKey("FATESCRIPT_NUMBER", DefaultLanguageHighlighterColors.NUMBER);
+  public static final TextAttributesKey LABEL =
+      createTextAttributesKey("FATESCRIPT_LABEL", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
   public static final TextAttributesKey DATATYPE =
       createTextAttributesKey("FATESCRIPT_DATATYPE", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
     public static final TextAttributesKey METHOD =
@@ -30,6 +32,7 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
 
 
   private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
+  private static final TextAttributesKey[] LABEL_KEYS = new TextAttributesKey[]{LABEL};
   private static final TextAttributesKey[] DATATYPE_KEYS = new TextAttributesKey[]{DATATYPE};
   private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
   private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
@@ -60,9 +63,6 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     }
     if (tokenType.equals(FateScriptTypes.METHOD)) {
       return METHOD_KEYS;
-    }
-    if (tokenType.equals(FateScriptTypes.KEYWORD_OPS)) {
-      return KEYWORD_OPS_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.STRING)) {
       return STRING_KEYS;

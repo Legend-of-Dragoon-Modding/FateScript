@@ -16,6 +16,12 @@
   tokens=[
     eol='regexp:\n+'
     whitespace='regexp:\s+'
+
+    comma=','
+    doublecolon='::'
+    colon=':'
+    lbracket='['
+    rbracket=']'
     
     // Keyword ops
     yield='yield'
@@ -29,16 +35,16 @@
     wait='wait'
     wait_cmp='wait_cmp'
 
-    // Logical ops
+    // Bitwise ops
     and='and'
     or='or'
     xor='xor'
     andor='andor'
     not='not'
-
-    // Math ops
     shl='shl'
     shr='shr'
+
+    // Math ops
     add='add'
     sub='sub'
     sub_rev='sub_rev'
@@ -106,37 +112,61 @@
     string='regexp:\[.*]'
   ]
 
-  //name(".*expr")='expression'
-  //extends(".*expr")=expr
+  name(".*root")='root'
+  //extends(".*root")=root
 }
 
+/*root ::= line*
+line ::= !<<eof>> entry? (<<eof>> | eol)
+entry ::= entrypoint colon labelRef
+labelRef ::= &colon id*/
+
 root ::= line*
-line ::= !<<eof>> (dataRef | relativeJump | entry | code | label)? (<<eof>> | eol+) {pin=2 recoverWhile=lineRecover}
+line ::= !<<eof>> (dataRef | relativeJump | entry | code | label colon)? (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
 private lineRecover ::= !line
 
-labelRef ::= colon id (lbracket (labelRef |  number | storage) (binop (number | storage))? rbracket)?
-code ::= op !colon
-label ::= id colon
-op ::= (keywordOps | while | waitOps | logicalOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps) params?
-params ::= param ((comma param)+)?
-param ::= methodRef | number | inline | gameVar | storage | cmp | id
-methodRef ::= id doublecolon method
+labelRef ::= labelRefLabel (lbracket (labelRef |  number | storageGroup) (binop (number | storageGroup))? rbracket)?
+labelRefLabel ::= colon id
+label ::= id &(colon)
 
-inline ::= inl lbracket ((lbracket storage rbracket) | labelRef) (binop (inline | number | storage))? rbracket
-gameVar ::= var lbracket number (binop (storage | number))? rbracket (lbracket (number | storage) rbracket)?
-storage ::= stor lbracket (number | storage) (comma number)? (binop storage)? rbracket
+code ::= op !colon params?
 
-entry ::= entrypoint labelRef
-relativeJump ::= rel labelRef
-dataRef ::= data (number | (str string))
-
+// Ops
+private op ::= (keywordOps | while | waitOps | bitwiseOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps)
 keywordOps ::= return | yield | rewind
 waitOps ::= wait | wait_cmp
-logicalOps ::= and | or | xor | andor | not
-mathOps ::= shl | shr | add | sub | sub_rev | incr | decr | neg | abs | mul | div | div_rev | mod | mod_rev | mul_12 | div_12 | div_12_rev | sqrt | rand | sin_12 | cos_12 | atan2_12
+bitwiseOps ::= and | or | xor | andor | not | shl | shr
+mathOps ::= add | sub | sub_rev | incr | decr | neg | abs | mul | div | div_rev | mod | mod_rev | mul_12 | div_12 | div_12_rev | sqrt | rand | sin_12 | cos_12 | atan2_12
 jumpOps ::= jmp | jmp_table
 gosubOps ::= gosub | gosub_table
 scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
 otherOps ::= call | move | memcpy
 uselessOps ::= swap_broken | depth | noop
+
+params ::= param ((comma param)+)?
+param ::= methodRef | number | inline | gameVarGroup | storageGroup | cmp | id
+
+methodRef ::= id doublecolon method
+
+// Inline
+inline ::= inl lbracket (lbracket storageGroup rbracket | labelRef) (binop (inline | number | storageGroup))? rbracket
+
+// GameVar
+private gameVarGroup ::= gameVarArray | gameVarArrayOffsetNumber | gameVarArrayOffsetStorage | gameVar
+gameVar ::= var lbracket number [binop (storage | number)] rbracket
+gameVarArray ::= var lbracket number rbracket lbracket (number | storage) rbracket
+gameVarArrayOffsetNumber ::= var lbracket number binop number rbracket lbracket storage rbracket
+gameVarArrayOffsetStorage ::= var lbracket number binop storage rbracket lbracket (number | storage) rbracket
+
+// Storage
+private storageGroup ::= storage | otherStorage | otherStorageOffset | otherOtherStorage
+storage ::= stor lbracket number rbracket
+otherStorage ::= stor lbracket storage comma number rbracket
+otherStorageOffset ::= stor lbracket storage comma number [binop storage] rbracket
+otherOtherStorage ::= stor lbracket otherStorage comma number rbracket
+
+entry ::= entrypoint labelRef
+relativeJump ::= rel labelRef
+dataRef ::= data (number | (str string))
+
 number ::= dec | hex

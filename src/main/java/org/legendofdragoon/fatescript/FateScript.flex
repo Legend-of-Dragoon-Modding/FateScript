@@ -68,16 +68,16 @@ STRING=\[.*]
   "wait"                      { return WAIT; }
   "wait_cmp"                  { return WAIT_CMP; }
 
-  // Logical ops
+  // Bitwise ops
   "and"                       { return AND; }
   "or"                        { return OR; }
   "xor"                       { return XOR; }
   "andor"                     { return ANDOR; }
   "not"                       { return NOT; }
-
-  // Math ops
   "shl"                       { return SHL; }
   "shr"                       { return SHR; }
+
+  // Math ops
   "add"                       { return ADD; }
   "sub"                       { return SUB; }
   "sub_rev"                   { return SUB_REV; }

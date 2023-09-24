@@ -6,8 +6,7 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.legendofdragoon.fatescript.psi.FateScriptKeywordOps;
-import org.legendofdragoon.fatescript.psi.FateScriptVisitor;
+import org.legendofdragoon.fatescript.psi.*;
 
 public class FateScriptAnnotator implements Annotator {
     @Override
@@ -17,6 +16,18 @@ public class FateScriptAnnotator implements Annotator {
             public void visitKeywordOps(@NotNull FateScriptKeywordOps o) {
                 super.visitKeywordOps(o);
                 setHighlighting(o, holder, FateScriptSyntaxHighlighter.KEYWORD_OPS);
+            }
+
+            @Override
+            public void visitLabel(@NotNull FateScriptLabel o) {
+                super.visitLabel(o);
+                setHighlighting(o, holder, FateScriptSyntaxHighlighter.LABEL);
+            }
+
+            @Override
+            public void visitLabelRefLabel(@NotNull FateScriptLabelRefLabel o) {
+                super.visitLabelRefLabel(o);
+                setHighlighting(o, holder, FateScriptSyntaxHighlighter.LABEL);
             }
         });
     }
