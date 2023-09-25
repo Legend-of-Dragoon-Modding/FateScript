@@ -106,30 +106,30 @@
     cmp='regexp:<=|<|>=|>|==|!=|&|!&'
     binop='regexp:[+\-*/]'
     id='regexp:[a-zA-Z_]\w*'
+    label='regexp:[a-zA-Z_]\w+'
     method='regexp:[a-zA-Z_]\w*'
     dec='regexp:\d{1,10}'
     hex='regexp:0x[a-fA-F\d]{1,8}'
     string='regexp:\[.*]'
   ]
 
-  name(".*root")='root'
+  //name(".*root")='root'
   //extends(".*root")=root
 }
 
-/*root ::= line*
-line ::= !<<eof>> entry? (<<eof>> | eol)
-entry ::= entrypoint colon labelRef
-labelRef ::= &colon id*/
-
 root ::= line*
-line ::= !<<eof>> (dataRef | relativeJump | entry | code | label colon)? (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
+line ::= !<<eof>> (dataRef | relativeJump | entry | code | labelHeader )? (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
 private lineRecover ::= !line
 
-labelRef ::= labelRefLabel (lbracket (labelRef |  number | storageGroup) (binop (number | storageGroup))? rbracket)?
-labelRefLabel ::= colon id
-label ::= id &(colon)
+// Datatypes
+entry ::= entrypoint labelRef
+relativeJump ::= rel labelRef
+dataRef ::= data (number | (str string))
 
-code ::= op !colon params?
+labelRef ::= colon label
+labelHeader ::= label colon
+
+code ::= (op !colon) [params]
 
 // Ops
 private op ::= (keywordOps | while | waitOps | bitwiseOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps)
@@ -143,13 +143,23 @@ scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
 otherOps ::= call | move | memcpy
 uselessOps ::= swap_broken | depth | noop
 
-params ::= param ((comma param)+)?
-param ::= methodRef | number | inline | gameVarGroup | storageGroup | cmp | id
+private left inner params ::= param [(comma param)+]
+param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
 
 methodRef ::= id doublecolon method
 
 // Inline
-inline ::= inl lbracket (lbracket storageGroup rbracket | labelRef) (binop (inline | number | storageGroup))? rbracket
+private inlineGroup ::= inlineTable1 | inline
+inline ::= inl lbracket inlineLabelStorageIndex rbracket
+inlineLabelStorageIndex ::= labelRef [lbracket storage rbracket]
+//inlineTableNumberIndex ::= inl lbracket
+inlineTable1 ::= inl lbracket inner1 rbracket
+inner1 ::= labelRef inner2 rbracket
+left inner inner2 ::= lbracket labelRef storageIndexOffset
+left inner storageIndexOffset ::= storageIndex rbracket binop storage
+left inner storageIndex ::= lbracket storage
+//inlineTableOffsetStorage ::= inl lbracket labelRef lbracket inlineTableStorageIndex binop storage rbracket rbracket
+//inlineTableStorageIndex ::= labelRef lbracket inlineLabelStorageIndex rbracket
 
 // GameVar
 private gameVarGroup ::= gameVarArray | gameVarArrayOffsetNumber | gameVarArrayOffsetStorage | gameVar
@@ -164,9 +174,5 @@ storage ::= stor lbracket number rbracket
 otherStorage ::= stor lbracket storage comma number rbracket
 otherStorageOffset ::= stor lbracket storage comma number [binop storage] rbracket
 otherOtherStorage ::= stor lbracket otherStorage comma number rbracket
-
-entry ::= entrypoint labelRef
-relativeJump ::= rel labelRef
-dataRef ::= data (number | (str string))
 
 number ::= dec | hex

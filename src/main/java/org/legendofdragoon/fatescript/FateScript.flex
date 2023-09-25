@@ -50,10 +50,13 @@ STRING=\[.*]
 
 %state STRING_EXPECTED
 %state METHOD_EXPECTED
+%state LABEL_REF_EXPECTED
+%state LABEL_EXPECTED
+%state PARAM_EXPECTED
 
 %%
-<YYINITIAL> {
-  {EOL}                       { return EOL; }
+<YYINITIAL, PARAM_EXPECTED> {
+  {EOL}                       { popState(); return EOL; }
   {WHITE_SPACE}               { return WHITE_SPACE; }
 
   // Keyword ops
@@ -62,50 +65,50 @@ STRING=\[.*]
   "rewind"                    { return REWIND; }
 
   // Loop ops
-  "while"                     { return WHILE; }
+  "while"                     { pushState(PARAM_EXPECTED); return WHILE; }
 
   // Wait ops
-  "wait"                      { return WAIT; }
-  "wait_cmp"                  { return WAIT_CMP; }
+  "wait"                      { pushState(PARAM_EXPECTED); return WAIT; }
+  "wait_cmp"                  { pushState(PARAM_EXPECTED); return WAIT_CMP; }
 
   // Bitwise ops
-  "and"                       { return AND; }
-  "or"                        { return OR; }
-  "xor"                       { return XOR; }
-  "andor"                     { return ANDOR; }
-  "not"                       { return NOT; }
-  "shl"                       { return SHL; }
-  "shr"                       { return SHR; }
+  "and"                       { pushState(PARAM_EXPECTED); return AND; }
+  "or"                        { pushState(PARAM_EXPECTED); return OR; }
+  "xor"                       { pushState(PARAM_EXPECTED); return XOR; }
+  "andor"                     { pushState(PARAM_EXPECTED); return ANDOR; }
+  "not"                       { pushState(PARAM_EXPECTED); return NOT; }
+  "shl"                       { pushState(PARAM_EXPECTED); return SHL; }
+  "shr"                       { pushState(PARAM_EXPECTED); return SHR; }
 
   // Math ops
-  "add"                       { return ADD; }
-  "sub"                       { return SUB; }
-  "sub_rev"                   { return SUB_REV; }
-  "incr"                      { return INCR; }
-  "decr"                      { return DECR; }
-  "neg"                       { return NEG; }
-  "abs"                       { return ABS; }
-  "mul"                       { return MUL; }
-  "div"                       { return DIV; }
-  "div_rev"                   { return DIV_REV; }
-  "mod"                       { return MOD; }
-  "mod_rev"                   { return MOD_REV; }
-  "mul_12"                    { return MUL_12; }
-  "div_12"                    { return DIV_12; }
-  "div_12_rev"                { return DIV_12_REV; }
-  "sqrt"                      { return SQRT; }
-  "rand"                      { return RAND; }
-  "sin_12"                    { return SIN_12; }
-  "cos_12"                    { return COS_12; }
-  "atan2_12"                  { return ATAN2_12; }
+  "add"                       { pushState(PARAM_EXPECTED); return ADD; }
+  "sub"                       { pushState(PARAM_EXPECTED); return SUB; }
+  "sub_rev"                   { pushState(PARAM_EXPECTED); return SUB_REV; }
+  "incr"                      { pushState(PARAM_EXPECTED); return INCR; }
+  "decr"                      { pushState(PARAM_EXPECTED); return DECR; }
+  "neg"                       { pushState(PARAM_EXPECTED); return NEG; }
+  "abs"                       { pushState(PARAM_EXPECTED); return ABS; }
+  "mul"                       { pushState(PARAM_EXPECTED); return MUL; }
+  "div"                       { pushState(PARAM_EXPECTED); return DIV; }
+  "div_rev"                   { pushState(PARAM_EXPECTED); return DIV_REV; }
+  "mod"                       { pushState(PARAM_EXPECTED); return MOD; }
+  "mod_rev"                   { pushState(PARAM_EXPECTED); return MOD_REV; }
+  "mul_12"                    { pushState(PARAM_EXPECTED); return MUL_12; }
+  "div_12"                    { pushState(PARAM_EXPECTED); return DIV_12; }
+  "div_12_rev"                { pushState(PARAM_EXPECTED); return DIV_12_REV; }
+  "sqrt"                      { pushState(PARAM_EXPECTED); return SQRT; }
+  "rand"                      { pushState(PARAM_EXPECTED); return RAND; }
+  "sin_12"                    { pushState(PARAM_EXPECTED); return SIN_12; }
+  "cos_12"                    { pushState(PARAM_EXPECTED); return COS_12; }
+  "atan2_12"                  { pushState(PARAM_EXPECTED); return ATAN2_12; }
 
   // Jump ops
-  "jmp"                       { return JMP; }
-  "jmp_table"                 { return JMP_TABLE; }
+  "jmp"                       { pushState(PARAM_EXPECTED); return JMP; }
+  "jmp_table"                 { pushState(PARAM_EXPECTED); return JMP_TABLE; }
 
   // Gosub ops
-  "gosub"                     { return GOSUB; }
-  "gosub_table"               { return GOSUB_TABLE; }
+  "gosub"                     { pushState(PARAM_EXPECTED); return GOSUB; }
+  "gosub_table"               { pushState(PARAM_EXPECTED); return GOSUB_TABLE; }
 
   // Script ops
   "consume"                   { return CONSUME; }
@@ -115,9 +118,9 @@ STRING=\[.*]
   "fork_reenter"              { return FORK_REENTER; }
 
   // Other ops
-  "call"                      { return CALL; }
-  "mov"                       { return MOV; }
-  "memcpy"                    { return MEMCPY; }
+  "call"                      { pushState(PARAM_EXPECTED); return CALL; }
+  "mov"                       { pushState(PARAM_EXPECTED); return MOV; }
+  "memcpy"                    { pushState(PARAM_EXPECTED); return MEMCPY; }
 
   // Useless ops
   "swap_broken"               { return SWAP_BROKEN; }
@@ -125,7 +128,7 @@ STRING=\[.*]
   "noop"                      { return NOOP; }
 
   // Datatypes
-  "entrypoint"                { return ENTRYPOINT; }
+  "entrypoint"                { pushState(LABEL_REF_EXPECTED); return ENTRYPOINT; }
   "data"                      { return DATA; }
   "rel"                       { return REL; }
 
@@ -144,7 +147,7 @@ STRING=\[.*]
   {COMMENT}                   { return COMMENT; }
   {CMP}                       { return CMP; }
   {BINOP}                     { return BINOP; }
-  {ID}                        { return ID; }
+  {ID}                        { if (zzLexicalState == 0) { return LABEL; } return ID; }
   {DEC}                       { return DEC; }
   {HEX}                       { return HEX; }
 }
@@ -155,6 +158,12 @@ STRING=\[.*]
 
 <METHOD_EXPECTED> {
   {ID}                        { popState(); return METHOD; }
+}
+
+<LABEL_REF_EXPECTED> {
+  {WHITE_SPACE}               { return WHITE_SPACE; }
+  ":"                         { return COLON; }
+  {ID}                        { popState(); return LABEL; }
 }
 
 [^] { return BAD_CHARACTER; }

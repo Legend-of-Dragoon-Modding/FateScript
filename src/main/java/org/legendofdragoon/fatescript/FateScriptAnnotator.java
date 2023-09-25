@@ -17,18 +17,6 @@ public class FateScriptAnnotator implements Annotator {
                 super.visitKeywordOps(o);
                 setHighlighting(o, holder, FateScriptSyntaxHighlighter.KEYWORD_OPS);
             }
-
-            @Override
-            public void visitLabel(@NotNull FateScriptLabel o) {
-                super.visitLabel(o);
-                setHighlighting(o, holder, FateScriptSyntaxHighlighter.LABEL);
-            }
-
-            @Override
-            public void visitLabelRefLabel(@NotNull FateScriptLabelRefLabel o) {
-                super.visitLabelRefLabel(o);
-                setHighlighting(o, holder, FateScriptSyntaxHighlighter.LABEL);
-            }
         });
     }
 
