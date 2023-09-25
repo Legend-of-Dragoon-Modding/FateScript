@@ -42,16 +42,16 @@ EOL=\n+
 WHITE_SPACE=\s+
 COMMENT=;.*
 CMP=<=|<|>=|>|==|\!=|&|\!&
-BINOP=[+\-*/]
 ID=[a-zA-Z_][a-zA-Z_0-9]*
 DEC=[0-9]{1,10}
 HEX=0x[a-fA-F\d]{1,8}
 STRING=\[.*]
 
 %state STRING_EXPECTED
+%state CLASS_EXPECTED
 %state METHOD_EXPECTED
+%state LABEL_TERMINATOR
 %state LABEL_REF_EXPECTED
-%state LABEL_EXPECTED
 %state PARAM_EXPECTED
 
 %%
@@ -118,7 +118,7 @@ STRING=\[.*]
   "fork_reenter"              { return FORK_REENTER; }
 
   // Other ops
-  "call"                      { pushState(PARAM_EXPECTED); return CALL; }
+  "call"                      { pushState(CLASS_EXPECTED); return CALL; }
   "mov"                       { pushState(PARAM_EXPECTED); return MOV; }
   "memcpy"                    { pushState(PARAM_EXPECTED); return MEMCPY; }
 
@@ -128,7 +128,7 @@ STRING=\[.*]
   "noop"                      { return NOOP; }
 
   // Datatypes
-  "entrypoint"                { pushState(LABEL_REF_EXPECTED); return ENTRYPOINT; }
+  "entrypoint"                { return ENTRYPOINT; }
   "data"                      { return DATA; }
   "rel"                       { return REL; }
 
@@ -139,15 +139,14 @@ STRING=\[.*]
   "str"                       { pushState(STRING_EXPECTED); return STR; }
 
   ","                         { return COMMA; }
-  "::"                        { pushState(METHOD_EXPECTED); return DOUBLECOLON; }
-  ":"                         { return COLON; }
+  ":"                         { pushState(LABEL_REF_EXPECTED); return COLON; }
   "["                         { return LBRACKET; }
   "]"                         { return RBRACKET; }
+  "+"                         { return PLUS; }
 
   {COMMENT}                   { return COMMENT; }
   {CMP}                       { return CMP; }
-  {BINOP}                     { return BINOP; }
-  {ID}                        { if (zzLexicalState == 0) { return LABEL; } return ID; }
+  {ID}                        { if (zzLexicalState == YYINITIAL) { pushState(LABEL_TERMINATOR); return LABEL; } return ID; }
   {DEC}                       { return DEC; }
   {HEX}                       { return HEX; }
 }
@@ -156,13 +155,30 @@ STRING=\[.*]
   {STRING}                    { popState(); return STRING; }
 }
 
-<METHOD_EXPECTED> {
-  {ID}                        { popState(); return METHOD; }
+<CLASS_EXPECTED, METHOD_EXPECTED> {
+  "::"                        { return DOUBLECOLON; }
+  {WHITE_SPACE}               { return WHITE_SPACE; }
+  {ID}
+    {
+      if (zzLexicalState - CLASS_EXPECTED == 0) {
+        popState();
+        pushState(METHOD_EXPECTED);
+        return CLASSNAME;
+      } else if (zzLexicalState - METHOD_EXPECTED == 0) {
+        popState();
+        pushState(PARAM_EXPECTED);
+        return METHOD;
+      }
+    }
+}
+
+<LABEL_TERMINATOR> {
+  {WHITE_SPACE}               { return WHITE_SPACE; }
+  ":"                         { popState(); return COLON; }
 }
 
 <LABEL_REF_EXPECTED> {
   {WHITE_SPACE}               { return WHITE_SPACE; }
-  ":"                         { return COLON; }
   {ID}                        { popState(); return LABEL; }
 }
 

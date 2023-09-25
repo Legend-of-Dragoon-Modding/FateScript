@@ -51,7 +51,7 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     if (tokenType.equals(FateScriptTypes.COMMENT)) {
       return COMMENT_KEYS;
     }
-    /*if (tokenType.equals(FateScriptTypes.DEC) || tokenType.equals(FateScriptTypes.HEX)) {
+    if (tokenType.equals(FateScriptTypes.DEC) || tokenType.equals(FateScriptTypes.HEX)) {
       return NUMBER_KEYS;
     }
     if (
@@ -61,12 +61,15 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     ) {
       return DATATYPE_KEYS;
     }
+    if (tokenType.equals(FateScriptTypes.KEYWORD_OPS)) {
+      return KEYWORD_OPS_KEYS;
+    }
     if (tokenType.equals(FateScriptTypes.METHOD)) {
       return METHOD_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.STRING)) {
       return STRING_KEYS;
-    }*/
+    }
     if (tokenType.equals(FateScriptTypes.LABEL)) {
       return LABEL_KEYS;
     }

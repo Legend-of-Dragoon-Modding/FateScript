@@ -104,9 +104,9 @@
 
     comment='regexp:;.*'
     cmp='regexp:<=|<|>=|>|==|!=|&|!&'
-    binop='regexp:[+\-*/]'
     id='regexp:[a-zA-Z_]\w*'
-    label='regexp:[a-zA-Z_]\w+'
+    label='regexp:[a-zA-Z_]\w*'
+    classname='regexp:[a-zA-Z_]\w*'
     method='regexp:[a-zA-Z_]\w*'
     dec='regexp:\d{1,10}'
     hex='regexp:0x[a-fA-F\d]{1,8}'
@@ -146,33 +146,33 @@ uselessOps ::= swap_broken | depth | noop
 private left inner params ::= param [(comma param)+]
 param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
 
-methodRef ::= id doublecolon method
+methodRef ::= classname doublecolon method
 
 // Inline
 private inlineGroup ::= inlineTable1 | inline
 inline ::= inl lbracket inlineLabelStorageIndex rbracket
 inlineLabelStorageIndex ::= labelRef [lbracket storage rbracket]
 //inlineTableNumberIndex ::= inl lbracket
-inlineTable1 ::= inl lbracket inner1 rbracket
-inner1 ::= labelRef inner2 rbracket
-left inner inner2 ::= lbracket labelRef storageIndexOffset
-left inner storageIndexOffset ::= storageIndex rbracket binop storage
-left inner storageIndex ::= lbracket storage
-//inlineTableOffsetStorage ::= inl lbracket labelRef lbracket inlineTableStorageIndex binop storage rbracket rbracket
+//inlineTable1 ::= inl lbracket inner1 rbracket
+//inner1 ::= labelRef inner2 rbracket
+//left inner inner2 ::= lbracket labelRef storageIndexOffset
+//left inner storageIndexOffset ::= storageIndex rbracket plus storage
+//left inner storageIndex ::= lbracket storage
+//inlineTableOffsetStorage ::= inl lbracket labelRef lbracket inlineTableStorageIndex plus storage rbracket rbracket
 //inlineTableStorageIndex ::= labelRef lbracket inlineLabelStorageIndex rbracket
 
 // GameVar
 private gameVarGroup ::= gameVarArray | gameVarArrayOffsetNumber | gameVarArrayOffsetStorage | gameVar
-gameVar ::= var lbracket number [binop (storage | number)] rbracket
+gameVar ::= var lbracket number [plus (storage | number)] rbracket
 gameVarArray ::= var lbracket number rbracket lbracket (number | storage) rbracket
-gameVarArrayOffsetNumber ::= var lbracket number binop number rbracket lbracket storage rbracket
-gameVarArrayOffsetStorage ::= var lbracket number binop storage rbracket lbracket (number | storage) rbracket
+gameVarArrayOffsetNumber ::= var lbracket number plus number rbracket lbracket storage rbracket
+gameVarArrayOffsetStorage ::= var lbracket number plus storage rbracket lbracket (number | storage) rbracket
 
 // Storage
 private storageGroup ::= storage | otherStorage | otherStorageOffset | otherOtherStorage
 storage ::= stor lbracket number rbracket
 otherStorage ::= stor lbracket storage comma number rbracket
-otherStorageOffset ::= stor lbracket storage comma number [binop storage] rbracket
+otherStorageOffset ::= stor lbracket storage comma number [plus storage] rbracket
 otherOtherStorage ::= stor lbracket otherStorage comma number rbracket
 
 number ::= dec | hex
