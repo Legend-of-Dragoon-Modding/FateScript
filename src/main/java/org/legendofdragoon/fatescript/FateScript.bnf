@@ -118,7 +118,7 @@
 }
 
 root ::= line*
-line ::= !<<eof>> (dataRef | relativeJump | entry | code | labelHeader )? (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
+line ::= !<<eof>> [dataRef | relativeJump | entry | code | labelHeader] (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
 private lineRecover ::= !line
 
 // Datatypes
@@ -149,17 +149,18 @@ param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp |
 methodRef ::= classname doublecolon method
 
 // Inline
-private inlineGroup ::= inlineTable1 | inline
-inline ::= inl lbracket inlineLabelStorageIndex rbracket
-inlineLabelStorageIndex ::= labelRef [lbracket storage rbracket]
-//inlineTableNumberIndex ::= inl lbracket
-//inlineTable1 ::= inl lbracket inner1 rbracket
-//inner1 ::= labelRef inner2 rbracket
-//left inner inner2 ::= lbracket labelRef storageIndexOffset
-//left inner storageIndexOffset ::= storageIndex rbracket plus storage
-//left inner storageIndex ::= lbracket storage
-//inlineTableOffsetStorage ::= inl lbracket labelRef lbracket inlineTableStorageIndex plus storage rbracket rbracket
-//inlineTableStorageIndex ::= labelRef lbracket inlineLabelStorageIndex rbracket
+private inlineGroup ::= inlineTable1 | inlineTable2 | inlineTable3 | inline
+inline ::= inl lbracket inlineLabelStorage rbracket
+inlineLabelStorage ::= labelRef [lbracket storage rbracket]
+inlineLabelNumber ::= labelRef lbracket number rbracket
+inlineTable1 ::= inl lbracket inlineTableLabelStorage rbracket
+inlineTableLabelStorage ::= labelRef lbracket inlineLabelStorage [plus storage] rbracket
+inlineTable2 ::= inl lbracket labelRef plus inlineTable2InlineOffset rbracket
+inlineTable2InlineOffset ::= inl lbracket inlineTable2LabelOffsetNumber rbracket
+inlineTable2LabelOffsetNumber ::= labelRef plus number
+inlineTable3 ::= inl lbracket inlineTable3LabelNumber rbracket
+inlineTable3LabelNumber ::= labelRef lbracket inlineTable3LabelOffsetNumber rbracket
+inlineTable3LabelOffsetNumber ::= inlineLabelNumber plus number
 
 // GameVar
 private gameVarGroup ::= gameVarArray | gameVarArrayOffsetNumber | gameVarArrayOffsetStorage | gameVar
