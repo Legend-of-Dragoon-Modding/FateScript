@@ -140,23 +140,26 @@ mathOps ::= add | sub | sub_rev | incr | decr | neg | abs | mul | div | div_rev 
 jumpOps ::= jmp | jmp_table
 gosubOps ::= gosub | gosub_table
 scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
-otherOps ::= call | move | memcpy
+otherOps ::= call | mov | memcpy
 uselessOps ::= swap_broken | depth | noop
 
 private left inner params ::= param [(comma param)+]
-param ::= methodRef | number | inline | gameVarGroup | storageGroup | cmp | id
+param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
 
 methodRef ::= classname doublecolon method
 
 // Inline
-inline ::= inl lbracket (inlineTable1And2 | inlineTable3 | inlineTable4 | inlineLabelStorage) rbracket
-inlineTable1And2 ::= labelRef lbracket inlineLabelStorage [plus storage] rbracket
-inlineLabelStorage ::= labelRef [lbracket storage rbracket]
-inlineTable3 ::= labelRef plus inlineTable3InlineOffset
-inlineTable3InlineOffset ::= inl lbracket inlineTable3NumberOffset rbracket
+private inlineGroup ::= inlineTable1And2 | inlineTable3 | inlineTable4 | inline
+inline ::= inl lbracket inlineLabelStorage rbracket
+inlineTable1And2 ::= inl lbracket inlineTable1And2Jump rbracket
+inlineTable1And2Jump ::= labelRef lbracket inlineLabelStorage [plus storage] rbracket
+inlineTable3 ::= inl lbracket inlineTable3InlineOffset rbracket
+inlineTable3InlineOffset ::= labelRef plus inl lbracket inlineTable3NumberOffset rbracket
 inlineTable3NumberOffset ::= labelRef plus number
-inlineTable4 ::= labelRef lbracket inlineTable4NumberOffset rbracket
+inlineTable4 ::=  inl lbracket inlineTable4Jump rbracket
+inlineTable4Jump ::= labelRef lbracket inlineTable4NumberOffset rbracket
 inlineTable4NumberOffset ::= inlineIndexedLabel plus number
+inlineLabelStorage ::= labelRef [lbracket storage rbracket]
 inlineIndexedLabel ::= labelRef lbracket number rbracket
 
 // GameVar
