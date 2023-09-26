@@ -1,7 +1,8 @@
 package org.legendofdragoon.fatescript;
 
 import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.tree.IElementType;import it.unimi.dsi.fastutil.ints.IntArrayList;
+import com.intellij.psi.tree.IElementType;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
@@ -41,21 +42,22 @@ import static org.legendofdragoon.fatescript.psi.FateScriptTypes.*;
 EOL=\n+
 WHITE_SPACE=\s+
 COMMENT=;.*
-CMP=<=|<|>=|>|==|\!=|&|\!&
 ID=[a-zA-Z_][a-zA-Z_0-9]*
 DEC=[0-9]{1,10}
 HEX=0x[a-fA-F\d]{1,8}
-STRING=\[.*]
+LODSTRING=.*
 
-%state STRING_EXPECTED
-%state CLASS_EXPECTED
-%state METHOD_EXPECTED
+%state PARAM_EXPECTED
 %state LABEL_TERMINATOR
 %state LABEL_REF_EXPECTED
-%state PARAM_EXPECTED
+%state CLASS_EXPECTED
+%state METHOD_EXPECTED
+%state STATE_INIT_LODSTRING
+%state STATE_LODSTRING
+%state STATE_LODSTRING_TAG
 
 %%
-<YYINITIAL, PARAM_EXPECTED> {
+<YYINITIAL, PARAM_EXPECTED, STATE_INIT_LODSTRING> {
   {EOL}                       { popState(); return EOL; }
   {WHITE_SPACE}               { return WHITE_SPACE; }
 
@@ -137,23 +139,26 @@ STRING=\[.*]
   "inl"                       { return INL; }
   "var"                       { return VAR; }
   "stor"                      { return STOR; }
-  "str"                       { pushState(STRING_EXPECTED); return STR; }
+  "str"                       { pushState(STATE_INIT_LODSTRING); return STR; }
 
   ","                         { return COMMA; }
   ":"                         { pushState(LABEL_REF_EXPECTED); return COLON; }
-  "["                         { return LBRACKET; }
+  "["                         { if (zzLexicalState == STATE_INIT_LODSTRING) { popState(); pushState(STATE_LODSTRING); } return LBRACKET; }
   "]"                         { return RBRACKET; }
   "+"                         { return PLUS; }
+  "<="                        { return LTE; }
+  "<"                         { return LT;}
+  ">="                        { return GTE; }
+  ">"                         { return GT; }
+  "=="                        { return EQ; }
+  "!="                        { return NEQ; }
+  "&"                         { return AND; }
+  "!&"                        { return NAND; }
 
   {COMMENT}                   { return COMMENT; }
-  {CMP}                       { return CMP; }
   {ID}                        { if (zzLexicalState == YYINITIAL) { pushState(LABEL_TERMINATOR); return LABEL; } return ID; }
   {DEC}                       { return DEC; }
   {HEX}                       { return HEX; }
-}
-
-<STRING_EXPECTED> {
-  {STRING}                    { popState(); return STRING; }
 }
 
 <CLASS_EXPECTED, METHOD_EXPECTED> {
@@ -181,6 +186,25 @@ STRING=\[.*]
 <LABEL_REF_EXPECTED> {
   {WHITE_SPACE}               { return WHITE_SPACE; }
   {ID}                        { popState(); return LABEL; }
+}
+
+<STATE_LODSTRING> {
+  "<"                         { pushState(STATE_LODSTRING_TAG); return LT; }
+  {LODSTRING}                 { yypushback(1); popState(); return LODSTRING; }
+}
+
+<STATE_LODSTRING_TAG> {
+  ">"                         { popState(); return GT; }
+  "="                         { return EQ; }
+  "sauto"                     { return SAUTO; }
+  "sbat"                      { return SBAT; }
+  "element"                   { return ELEM; }
+  "multibox"                  { return MULTIBOX; }
+  "line"                      { return LINE; }
+  "speed"                     { return SPEED; }
+  "colour"                    { return COLOUR; }
+  "var"                       { return VAR; }
+  {DEC}                       { return DEC; }
 }
 
 [^] { return BAD_CHARACTER; }

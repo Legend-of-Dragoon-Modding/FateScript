@@ -1,17 +1,17 @@
 {
-  parserClass="org.legendofdragoon.fatescript.psi.FateScriptParser"
-  parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
+  parserClass='org.legendofdragoon.fatescript.psi.FateScriptParser'
+  parserUtilClass='com.intellij.lang.parser.GeneratedParserUtilBase'
 
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  extends='com.intellij.extapi.psi.ASTWrapperPsiElement'
 
-  psiClassPrefix="FateScript"
-  psiImplClassSuffix="Impl"
-  psiPackage="org.legendofdragoon.fatescript.psi"
-  psiImplPackage="org.legendofdragoon.fatescript.psi.impl"
+  psiClassPrefix='FateScript'
+  psiImplClassSuffix='Impl'
+  psiPackage='org.legendofdragoon.fatescript.psi'
+  psiImplPackage='org.legendofdragoon.fatescript.psi.impl'
 
-  elementTypeHolderClass="org.legendofdragoon.fatescript.psi.FateScriptTypes"
-  elementTypeClass="org.legendofdragoon.fatescript.psi.FateScriptElementType"
-  tokenTypeClass="org.legendofdragoon.fatescript.psi.FateScriptTokenType"
+  elementTypeHolderClass='org.legendofdragoon.fatescript.psi.FateScriptTypes'
+  elementTypeClass='org.legendofdragoon.fatescript.psi.FateScriptElementType'
+  tokenTypeClass='org.legendofdragoon.fatescript.psi.FateScriptTokenType'
 
   tokens=[
     eol='regexp:\n+'
@@ -22,6 +22,15 @@
     colon=':'
     lbracket='['
     rbracket=']'
+    plus='+'
+    lte='<='
+    lt='<'
+    gte='>='
+    gt='>'
+    eq='=='
+    neq='!='
+    and='&'
+    nand='!&'
     
     // Keyword ops
     yield='yield'
@@ -104,31 +113,34 @@
     str='str'
 
     comment='regexp:;.*'
-    cmp='regexp:<=|<|>=|>|==|!=|&|!&'
     id='regexp:[a-zA-Z_]\w*'
     label='regexp:[a-zA-Z_]\w*'
     classname='regexp:[a-zA-Z_]\w*'
     method='regexp:[a-zA-Z_]\w*'
     dec='regexp:\d{1,10}'
     hex='regexp:0x[a-fA-F\d]{1,8}'
-    string='regexp:\[.*]'
+    lodstring='regexp:.*'
   ]
 
-  //name(".*root")='root'
-  //extends(".*root")=root
+  //name('.*root')='root'
+  //extends('.*root')=root
 }
 
-root ::= line*
-line ::= !<<eof>> [dataRef | relativeJump | entry | code | labelHeader] (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
-private lineRecover ::= !line
+root ::= rootLine*
+rootLine ::= !<<eof>> [dataRef | relativeJump | entry | code | labelHeader] (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
+private lineRecover ::= !rootLine
 
 // Datatypes
 entry ::= entrypoint labelRef
 relativeJump ::= rel labelRef
-dataRef ::= data (number | (str string))
+dataRef ::= data (number | (str lbracket textBlock rbracket))
 
 labelRef ::= colon label
 labelHeader ::= label colon
+
+textBlock ::= lodstringTag | lodstring
+lodstringTag ::= lt tags [eq dec] gt
+private tags ::= sauto | sbat | elem | multibox | line | speed | colour | var
 
 code ::= (op !colon) [params]
 
@@ -146,6 +158,7 @@ uselessOps ::= swap_broken | depth | noop
 
 private left inner params ::= param [(comma param)+]
 private param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
+private cmp ::= '<=' | '<' | '>=' | '>' | '==' | '!=' | '&' | '!&'
 
 methodRef ::= classname doublecolon method
 

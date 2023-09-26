@@ -23,8 +23,8 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
       createTextAttributesKey("FATESCRIPT_METHOD", DefaultLanguageHighlighterColors.STATIC_METHOD);
   public static final TextAttributesKey KEYWORD_OPS =
       createTextAttributesKey("FATESCRIPT_KEYWORD_OPS", DefaultLanguageHighlighterColors.KEYWORD);
-  public static final TextAttributesKey STRING =
-      createTextAttributesKey("FATESCRIPT_STRING", DefaultLanguageHighlighterColors.STRING);
+  public static final TextAttributesKey LODSTRING =
+      createTextAttributesKey("FATESCRIPT_LODSTRING", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
       createTextAttributesKey("FATESCRIPT_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
   public static final TextAttributesKey BAD_CHARACTER =
@@ -38,7 +38,7 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
   private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
   private static final TextAttributesKey[] METHOD_KEYS = new TextAttributesKey[]{METHOD};
   private static final TextAttributesKey[] KEYWORD_OPS_KEYS = new TextAttributesKey[]{KEYWORD_OPS};
-  private static final TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{STRING};
+  private static final TextAttributesKey[] LODSTRING_KEYS = new TextAttributesKey[]{LODSTRING};
   private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
   @Override
@@ -67,8 +67,8 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     if (tokenType.equals(FateScriptTypes.METHOD)) {
       return METHOD_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.STRING)) {
-      return STRING_KEYS;
+    if (tokenType.equals(FateScriptTypes.LODSTRING)) {
+      return LODSTRING_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.LABEL)) {
       return LABEL_KEYS;
