@@ -104,6 +104,7 @@ STRING=\[.*]
 
   // Jump ops
   "jmp"                       { pushState(PARAM_EXPECTED); return JMP; }
+  "jmp_cmp"                   { pushState(PARAM_EXPECTED); return JMP_CMP; }
   "jmp_table"                 { pushState(PARAM_EXPECTED); return JMP_TABLE; }
 
   // Gosub ops

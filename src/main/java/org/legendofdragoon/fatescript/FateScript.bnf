@@ -68,6 +68,7 @@
 
     // Jump ops
     jmp='jmp'
+    jmp_cmp='jmp_cmp'
     jmp_table='jmp_table'
 
     // Gosub ops
@@ -137,7 +138,7 @@ keywordOps ::= return | yield | rewind
 waitOps ::= wait | wait_cmp
 bitwiseOps ::= and | or | xor | andor | not | shl | shr
 mathOps ::= add | sub | sub_rev | incr | decr | neg | abs | mul | div | div_rev | mod | mod_rev | mul_12 | div_12 | div_12_rev | sqrt | rand | sin_12 | cos_12 | atan2_12
-jumpOps ::= jmp | jmp_table
+jumpOps ::= jmp | jmp_cmp | jmp_table
 gosubOps ::= gosub | gosub_table
 scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
 otherOps ::= call | mov | memcpy
