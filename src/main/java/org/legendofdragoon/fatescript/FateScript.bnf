@@ -144,7 +144,7 @@ otherOps ::= call | mov | memcpy
 uselessOps ::= swap_broken | depth | noop
 
 private left inner params ::= param [(comma param)+]
-param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
+private param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
 
 methodRef ::= classname doublecolon method
 
