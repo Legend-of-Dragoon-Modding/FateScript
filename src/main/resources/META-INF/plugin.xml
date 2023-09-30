@@ -45,5 +45,11 @@
     <annotator
             language="fatescript"
             implementationClass="org.legendofdragoon.fatescript.FateScriptAnnotator"/>
+    <lang.refactoringSupport
+            language="fatescript"
+            implementationClass="org.legendofdragoon.fatescript.FateScriptRefactoringSupportProvider"/>
+    <lang.findUsagesProvider
+            language="fatescript"
+            implementationClass="org.legendofdragoon.fatescript.FateScriptFindUsagesProvider"/>
   </extensions>
 </idea-plugin>

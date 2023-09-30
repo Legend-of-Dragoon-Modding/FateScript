@@ -13,6 +13,8 @@
   elementTypeClass='org.legendofdragoon.fatescript.psi.FateScriptElementType'
   tokenTypeClass='org.legendofdragoon.fatescript.psi.FateScriptTokenType'
 
+  psiImplUtilClass='org.legendofdragoon.fatescript.psi.impl.FateScriptPsiImplUtil'
+
   tokens=[
     eol='regexp:\n+'
     whitespace='regexp:\s+'
@@ -135,8 +137,11 @@ entry ::= entrypoint labelRef
 relativeJump ::= rel labelRef
 dataRef ::= data (number | (str lbracket textBlock rbracket))
 
-labelRef ::= colon label
-labelHeader ::= label colon
+labelRef ::= colon label { methods=[getReference] }
+labelHeader ::= label colon {
+  implements='org.legendofdragoon.fatescript.psi.FateScriptNamedElement'
+  methods=[getName setName getNameIdentifier]
+}
 
 textBlock ::= lodstringTag | lodstring
 lodstringTag ::= lt tags [eq dec] gt
