@@ -39,8 +39,8 @@ import static org.legendofdragoon.fatescript.psi.FateScriptTypes.*;
 %type IElementType
 %unicode
 
-EOL=\n+
-WHITE_SPACE=\s+
+EOL=\n
+WHITE_SPACE=[ \t]+
 COMMENT=;.*
 ID=[a-zA-Z_][a-zA-Z_0-9]*
 DEC=[0-9]{1,10}

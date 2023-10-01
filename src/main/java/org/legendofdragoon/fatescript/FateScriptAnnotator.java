@@ -13,15 +13,14 @@ public class FateScriptAnnotator implements Annotator {
     public void annotate(@NotNull final PsiElement element, @NotNull final AnnotationHolder holder) {
         element.accept(new FateScriptVisitor() {
             @Override
-            public void visitKeywordOps(@NotNull FateScriptKeywordOps o) {
+            public void visitKeywordOps(@NotNull final FateScriptKeywordOps o) {
                 super.visitKeywordOps(o);
-                setHighlighting(o, holder, FateScriptSyntaxHighlighter.KEYWORD_OPS);
+                setHighlighting(holder, FateScriptSyntaxHighlighter.KEYWORD_OPS);
             }
         });
     }
 
-    private static void setHighlighting(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
-                                        @NotNull TextAttributesKey key) {
-        holder.newAnnotation(HighlightSeverity.INFORMATION, "").textAttributes(key).create();
+    private static void setHighlighting(@NotNull final AnnotationHolder holder, @NotNull final TextAttributesKey key) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).textAttributes(key).create();
     }
 }

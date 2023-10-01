@@ -16,8 +16,8 @@
   psiImplUtilClass='org.legendofdragoon.fatescript.psi.impl.FateScriptPsiImplUtil'
 
   tokens=[
-    eol='regexp:\n+'
-    whitespace='regexp:\s+'
+    eol='regexp:\n'
+    whitespace='regexp:[ \t]+'
 
     comma=','
     doublecolon='::'
@@ -128,9 +128,8 @@
   //extends('.*root')=root
 }
 
-root ::= rootLine*
-rootLine ::= !<<eof>> [dataRef | relativeJump | entry | code | labelHeader] (<<eof>> | eol) {pin=2 recoverWhile=lineRecover}
-private lineRecover ::= !rootLine
+root ::= (rootLine | eol)*
+rootLine ::= !<<eof>> (dataRef | relativeJump | entry | code | labelHeader) (<<eof>> | eol) {pin=2}
 
 // Datatypes
 entry ::= entrypoint labelRef
