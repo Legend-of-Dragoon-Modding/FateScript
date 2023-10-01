@@ -5,6 +5,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiReference;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.legendofdragoon.fatescript.psi.FateScriptLabelHeader;
 import org.legendofdragoon.fatescript.psi.FateScriptLabelHeader;
@@ -32,6 +33,6 @@ public final class FateScriptPsiImplUtil {
   }
 
   public static @NotNull PsiReference getReference(final FateScriptLabelRef element) {
-    return new LabelReference(element, new TextRange(0, element.getTextLength()));
+    return new LabelReference(element, new TextRange(1, element.getTextLength()));
   }
 }
