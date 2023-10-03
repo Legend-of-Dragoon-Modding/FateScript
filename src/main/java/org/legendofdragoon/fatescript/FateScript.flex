@@ -1,6 +1,5 @@
 package org.legendofdragoon.fatescript;
 
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -47,71 +46,72 @@ DEC=[0-9]{1,10}
 HEX=0x[a-fA-F\d]{1,8}
 LODSTRING=.*
 
-%state PARAM_EXPECTED
-%state LABEL_TERMINATOR
-%state LABEL_REF_EXPECTED
-%state CLASS_EXPECTED
-%state METHOD_EXPECTED
+%state STATE_KEYWORD_OP
+%state STATE_PARAM
+%state STATE_LABEL_TERMINATOR
+%state STATE_LABEL_REF
+%state STATE_CLASS
+%state STATE_METHOD
 %state STATE_INIT_LODSTRING
 %state STATE_LODSTRING
 %state STATE_LODSTRING_TAG
 
 %%
-<YYINITIAL, PARAM_EXPECTED, STATE_INIT_LODSTRING> {
+<YYINITIAL, STATE_PARAM, STATE_INIT_LODSTRING> {
   {EOL}                       { popState(); return EOL; }
   {WHITE_SPACE}               { return WHITE_SPACE; }
 
   // Keyword ops
-  "yield"                     { return YIELD; }
-  "return"                    { return RETURN; }
-  "rewind"                    { return REWIND; }
+  "yield"                     { pushState(STATE_KEYWORD_OP); return YIELD; }
+  "return"                    { pushState(STATE_KEYWORD_OP); return RETURN; }
+  "rewind"                    { pushState(STATE_KEYWORD_OP); return REWIND; }
 
   // Loop ops
-  "while"                     { pushState(PARAM_EXPECTED); return WHILE; }
+  "while"                     { pushState(STATE_PARAM); return WHILE; }
 
   // Wait ops
-  "wait"                      { pushState(PARAM_EXPECTED); return WAIT; }
-  "wait_cmp"                  { pushState(PARAM_EXPECTED); return WAIT_CMP; }
+  "wait"                      { pushState(STATE_PARAM); return WAIT; }
+  "wait_cmp"                  { pushState(STATE_PARAM); return WAIT_CMP; }
 
   // Bitwise ops
-  "and"                       { pushState(PARAM_EXPECTED); return AND; }
-  "or"                        { pushState(PARAM_EXPECTED); return OR; }
-  "xor"                       { pushState(PARAM_EXPECTED); return XOR; }
-  "andor"                     { pushState(PARAM_EXPECTED); return ANDOR; }
-  "not"                       { pushState(PARAM_EXPECTED); return NOT; }
-  "shl"                       { pushState(PARAM_EXPECTED); return SHL; }
-  "shr"                       { pushState(PARAM_EXPECTED); return SHR; }
+  "and"                       { pushState(STATE_PARAM); return AND; }
+  "or"                        { pushState(STATE_PARAM); return OR; }
+  "xor"                       { pushState(STATE_PARAM); return XOR; }
+  "andor"                     { pushState(STATE_PARAM); return ANDOR; }
+  "not"                       { pushState(STATE_PARAM); return NOT; }
+  "shl"                       { pushState(STATE_PARAM); return SHL; }
+  "shr"                       { pushState(STATE_PARAM); return SHR; }
 
   // Math ops
-  "add"                       { pushState(PARAM_EXPECTED); return ADD; }
-  "sub"                       { pushState(PARAM_EXPECTED); return SUB; }
-  "sub_rev"                   { pushState(PARAM_EXPECTED); return SUB_REV; }
-  "incr"                      { pushState(PARAM_EXPECTED); return INCR; }
-  "decr"                      { pushState(PARAM_EXPECTED); return DECR; }
-  "neg"                       { pushState(PARAM_EXPECTED); return NEG; }
-  "abs"                       { pushState(PARAM_EXPECTED); return ABS; }
-  "mul"                       { pushState(PARAM_EXPECTED); return MUL; }
-  "div"                       { pushState(PARAM_EXPECTED); return DIV; }
-  "div_rev"                   { pushState(PARAM_EXPECTED); return DIV_REV; }
-  "mod"                       { pushState(PARAM_EXPECTED); return MOD; }
-  "mod_rev"                   { pushState(PARAM_EXPECTED); return MOD_REV; }
-  "mul_12"                    { pushState(PARAM_EXPECTED); return MUL_12; }
-  "div_12"                    { pushState(PARAM_EXPECTED); return DIV_12; }
-  "div_12_rev"                { pushState(PARAM_EXPECTED); return DIV_12_REV; }
-  "sqrt"                      { pushState(PARAM_EXPECTED); return SQRT; }
-  "rand"                      { pushState(PARAM_EXPECTED); return RAND; }
-  "sin_12"                    { pushState(PARAM_EXPECTED); return SIN_12; }
-  "cos_12"                    { pushState(PARAM_EXPECTED); return COS_12; }
-  "atan2_12"                  { pushState(PARAM_EXPECTED); return ATAN2_12; }
+  "add"                       { pushState(STATE_PARAM); return ADD; }
+  "sub"                       { pushState(STATE_PARAM); return SUB; }
+  "sub_rev"                   { pushState(STATE_PARAM); return SUB_REV; }
+  "incr"                      { pushState(STATE_PARAM); return INCR; }
+  "decr"                      { pushState(STATE_PARAM); return DECR; }
+  "neg"                       { pushState(STATE_PARAM); return NEG; }
+  "abs"                       { pushState(STATE_PARAM); return ABS; }
+  "mul"                       { pushState(STATE_PARAM); return MUL; }
+  "div"                       { pushState(STATE_PARAM); return DIV; }
+  "div_rev"                   { pushState(STATE_PARAM); return DIV_REV; }
+  "mod"                       { pushState(STATE_PARAM); return MOD; }
+  "mod_rev"                   { pushState(STATE_PARAM); return MOD_REV; }
+  "mul_12"                    { pushState(STATE_PARAM); return MUL_12; }
+  "div_12"                    { pushState(STATE_PARAM); return DIV_12; }
+  "div_12_rev"                { pushState(STATE_PARAM); return DIV_12_REV; }
+  "sqrt"                      { pushState(STATE_PARAM); return SQRT; }
+  "rand"                      { pushState(STATE_PARAM); return RAND; }
+  "sin_12"                    { pushState(STATE_PARAM); return SIN_12; }
+  "cos_12"                    { pushState(STATE_PARAM); return COS_12; }
+  "atan2_12"                  { pushState(STATE_PARAM); return ATAN2_12; }
 
   // Jump ops
-  "jmp"                       { pushState(PARAM_EXPECTED); return JMP; }
-  "jmp_cmp"                   { pushState(PARAM_EXPECTED); return JMP_CMP; }
-  "jmp_table"                 { pushState(PARAM_EXPECTED); return JMP_TABLE; }
+  "jmp"                       { pushState(STATE_PARAM); return JMP; }
+  "jmp_cmp"                   { pushState(STATE_PARAM); return JMP_CMP; }
+  "jmp_table"                 { pushState(STATE_PARAM); return JMP_TABLE; }
 
   // Gosub ops
-  "gosub"                     { pushState(PARAM_EXPECTED); return GOSUB; }
-  "gosub_table"               { pushState(PARAM_EXPECTED); return GOSUB_TABLE; }
+  "gosub"                     { pushState(STATE_PARAM); return GOSUB; }
+  "gosub_table"               { pushState(STATE_PARAM); return GOSUB_TABLE; }
 
   // Script ops
   "consume"                   { return CONSUME; }
@@ -121,9 +121,9 @@ LODSTRING=.*
   "fork_reenter"              { return FORK_REENTER; }
 
   // Other ops
-  "call"                      { pushState(CLASS_EXPECTED); return CALL; }
-  "mov"                       { pushState(PARAM_EXPECTED); return MOV; }
-  "memcpy"                    { pushState(PARAM_EXPECTED); return MEMCPY; }
+  "call"                      { pushState(STATE_CLASS); return CALL; }
+  "mov"                       { pushState(STATE_PARAM); return MOV; }
+  "memcpy"                    { pushState(STATE_PARAM); return MEMCPY; }
 
   // Useless ops
   "swap_broken"               { return SWAP_BROKEN; }
@@ -142,7 +142,7 @@ LODSTRING=.*
   "str"                       { pushState(STATE_INIT_LODSTRING); return STR; }
 
   ","                         { return COMMA; }
-  ":"                         { pushState(LABEL_REF_EXPECTED); return COLON; }
+  ":"                         { pushState(STATE_LABEL_REF); return COLON; }
   "["                         { if (zzLexicalState == STATE_INIT_LODSTRING) { popState(); pushState(STATE_LODSTRING); } return LBRACKET; }
   "]"                         { return RBRACKET; }
   "+"                         { return PLUS; }
@@ -156,34 +156,39 @@ LODSTRING=.*
   "!&"                        { return NAND; }
 
   {COMMENT}                   { return COMMENT; }
-  {ID}                        { if (zzLexicalState == YYINITIAL) { pushState(LABEL_TERMINATOR); return LABEL; } return ID; }
+  {ID}                        { if (zzLexicalState == YYINITIAL) { pushState(STATE_LABEL_TERMINATOR); return LABEL; } return ID; }
   {DEC}                       { return DEC; }
   {HEX}                       { return HEX; }
 }
 
-<CLASS_EXPECTED, METHOD_EXPECTED> {
+<STATE_KEYWORD_OP> {
+  {EOL}                       { popState(); return EOL; }
+  {WHITE_SPACE}               { return WHITE_SPACE; }
+}
+
+<STATE_CLASS, STATE_METHOD> {
   "::"                        { return DOUBLECOLON; }
   {WHITE_SPACE}               { return WHITE_SPACE; }
   {ID}
     {
-      if (zzLexicalState - CLASS_EXPECTED == 0) {
-        popState();
-        pushState(METHOD_EXPECTED);
-        return CLASSNAME;
-      } else if (zzLexicalState - METHOD_EXPECTED == 0) {
-        popState();
-        pushState(PARAM_EXPECTED);
-        return METHOD;
-      }
-    }
+                  if (zzLexicalState - STATE_CLASS == 0) {
+                    popState();
+                    pushState(STATE_METHOD);
+                    return CLASSNAME;
+                  } else if (zzLexicalState - STATE_METHOD == 0) {
+                    popState();
+                    pushState(STATE_PARAM);
+                    return METHOD;
+                  }
+                }
 }
 
-<LABEL_TERMINATOR> {
+<STATE_LABEL_TERMINATOR> {
   {WHITE_SPACE}               { return WHITE_SPACE; }
   ":"                         { popState(); return COLON; }
 }
 
-<LABEL_REF_EXPECTED> {
+<STATE_LABEL_REF> {
   {WHITE_SPACE}               { return WHITE_SPACE; }
   {ID}                        { popState(); return LABEL; }
 }

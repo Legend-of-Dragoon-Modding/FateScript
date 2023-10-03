@@ -129,7 +129,7 @@
 }
 
 root ::= (rootLine | eol)*
-rootLine ::= !<<eof>> (dataRef | relativeJump | entry | code | labelHeader) (<<eof>> | eol) {pin=2}
+rootLine ::= !<<eof>> (dataRef | relativeJump | entry | code | labelHeader) (<<eof>> | eol)
 
 // Datatypes
 entry ::= entrypoint labelRef
@@ -149,7 +149,7 @@ private tags ::= sauto | sbat | elem | multibox | line | speed | colour | var
 code ::= (op !colon) [params]
 
 // Ops
-private op ::= (keywordOps | while | waitOps | bitwiseOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps)
+private op ::= (keywordOps | while | waitOps | bitwiseOps | mathOps | jumpOps | gosubOps | scriptOps | otherOps | uselessOps) [params] { pin=1 }
 keywordOps ::= return | yield | rewind
 waitOps ::= wait | wait_cmp
 bitwiseOps ::= and | or | xor | andor | not | shl | shr
@@ -160,8 +160,9 @@ scriptOps ::= consume | deallocate | deallocate_other | fork | fork_reenter
 otherOps ::= call | mov | memcpy
 uselessOps ::= swap_broken | depth | noop
 
-private left inner params ::= param [(comma param)+]
-private param ::= methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp | id
+private params ::= param (comma param)* { pin=1 recoverWhile=paramRecover }
+private paramRecover ::= !(eol)
+private param ::= (methodRef | number | inlineGroup | gameVarGroup | storageGroup | cmp)
 private cmp ::= '<=' | '<' | '>=' | '>' | '==' | '!=' | '&' | '!&'
 
 methodRef ::= classname doublecolon method
@@ -188,10 +189,13 @@ gameVarArrayOffsetNumber ::= var lbracket number plus number rbracket lbracket s
 gameVarArrayOffsetStorage ::= var lbracket number plus storage rbracket lbracket (number | storage) rbracket
 
 // Storage
-private storageGroup ::= storage | otherStorage | otherStorageOffset | otherOtherStorage
+private storageGroup ::= (storage | otherStorage | otherStorageOffset | otherOtherStorage)
 storage ::= stor lbracket number rbracket
 otherStorage ::= stor lbracket storage comma number rbracket
 otherStorageOffset ::= stor lbracket storage comma number [plus storage] rbracket
 otherOtherStorage ::= stor lbracket otherStorage comma number rbracket
 
 number ::= dec | hex
+
+// Here to get parser to generate the ID IElementType
+private dummyId ::= id
