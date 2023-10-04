@@ -32,6 +32,8 @@ data 0x300
 
 LABEL_2:
 rel :JUMP
+consume
+deallocate
 
 JUMP:
 data str[hello.]

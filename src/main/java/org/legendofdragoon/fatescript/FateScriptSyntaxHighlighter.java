@@ -19,10 +19,18 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
       createTextAttributesKey("FATESCRIPT_LABEL", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
   public static final TextAttributesKey DATATYPE =
       createTextAttributesKey("FATESCRIPT_DATATYPE", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
-    public static final TextAttributesKey METHOD =
-      createTextAttributesKey("FATESCRIPT_METHOD", DefaultLanguageHighlighterColors.STATIC_METHOD);
   public static final TextAttributesKey KEYWORD_OPS =
       createTextAttributesKey("FATESCRIPT_KEYWORD_OPS", DefaultLanguageHighlighterColors.KEYWORD);
+  public static final TextAttributesKey SCRIPT_OPS =
+      createTextAttributesKey("FATESCRIPT_SCRIPT_OPS", KEYWORD_OPS);
+  public static final TextAttributesKey JUMP_OPS =
+      createTextAttributesKey("FATESCRIPT_JUMP_OPS", DefaultLanguageHighlighterColors.FUNCTION_CALL);
+  public static final TextAttributesKey GOSUB_OPS =
+      createTextAttributesKey("FATESCRIPT_GOSUB_OPS", JUMP_OPS);
+  public static final TextAttributesKey CLASS =
+      createTextAttributesKey("FATESCRIPT_CLASS", DefaultLanguageHighlighterColors.CLASS_NAME);
+    public static final TextAttributesKey METHOD =
+      createTextAttributesKey("FATESCRIPT_METHOD", DefaultLanguageHighlighterColors.STATIC_METHOD);
   public static final TextAttributesKey LODSTRING =
       createTextAttributesKey("FATESCRIPT_LODSTRING", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
@@ -31,14 +39,18 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
       createTextAttributesKey("FATESCRIPT_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
 
-  private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
+  private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
   private static final TextAttributesKey[] LABEL_KEYS = new TextAttributesKey[]{LABEL};
   private static final TextAttributesKey[] DATATYPE_KEYS = new TextAttributesKey[]{DATATYPE};
-  private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
-  private static final TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{NUMBER};
-  private static final TextAttributesKey[] METHOD_KEYS = new TextAttributesKey[]{METHOD};
   private static final TextAttributesKey[] KEYWORD_OPS_KEYS = new TextAttributesKey[]{KEYWORD_OPS};
+  private static final TextAttributesKey[] SCRIPT_OPS_KEYS = new TextAttributesKey[]{SCRIPT_OPS};
+  private static final TextAttributesKey[] JUMP_OPS_KEYS = new TextAttributesKey[]{JUMP_OPS};
+  private static final TextAttributesKey[] GOSUB_OPS_KEYS = new TextAttributesKey[]{GOSUB_OPS};
+  private static final TextAttributesKey[] CLASS_KEYS = new TextAttributesKey[]{CLASS};
+  private static final TextAttributesKey[] METHOD_KEYS = new TextAttributesKey[]{METHOD};
   private static final TextAttributesKey[] LODSTRING_KEYS = new TextAttributesKey[]{LODSTRING};
+  private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
+  private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
   private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
   @Override
@@ -48,11 +60,11 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
 
   @Override
   public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
-    if (tokenType.equals(FateScriptTypes.COMMENT)) {
-      return COMMENT_KEYS;
-    }
     if (tokenType.equals(FateScriptTypes.DEC) || tokenType.equals(FateScriptTypes.HEX)) {
       return NUMBER_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.LABEL)) {
+      return LABEL_KEYS;
     }
     if (
         tokenType.equals(FateScriptTypes.ENTRYPOINT) ||
@@ -61,17 +73,29 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
     ) {
       return DATATYPE_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.KEYWORD_OPS)) {
+    if (tokenType.equals(FateScriptTypes.KEYWORD_OPS) || tokenType.equals(FateScriptTypes.WHILE)) {
       return KEYWORD_OPS_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.SCRIPT_OPS)) {
+      return SCRIPT_OPS_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.JUMP_OPS)) {
+      return JUMP_OPS_KEYS;
+    }
+    if (tokenType.equals(FateScriptTypes.GOSUB_OPS)) {
+      return GOSUB_OPS_KEYS;
     }
     if (tokenType.equals(FateScriptTypes.METHOD)) {
       return METHOD_KEYS;
     }
+    if (tokenType.equals(FateScriptTypes.CLASSNAME)) {
+      return CLASS_KEYS;
+    }
     if (tokenType.equals(FateScriptTypes.LODSTRING)) {
       return LODSTRING_KEYS;
     }
-    if (tokenType.equals(FateScriptTypes.LABEL)) {
-      return LABEL_KEYS;
+    if (tokenType.equals(FateScriptTypes.COMMENT)) {
+      return COMMENT_KEYS;
     }
     if (tokenType.equals(TokenType.BAD_CHARACTER)) {
       return BAD_CHAR_KEYS;

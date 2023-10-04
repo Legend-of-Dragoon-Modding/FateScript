@@ -37,6 +37,12 @@
     <lang.parserDefinition
             language="fatescript"
             implementationClass="org.legendofdragoon.fatescript.FateScriptParserDefinition"/>
+    <additionalTextAttributes
+            scheme="Darcula"
+            file="colorSchemes/FateScriptColors.xml"/>
+    <additionalTextAttributes
+            scheme="Default"
+            file="colorSchemes/FateScriptColors.xml"/>
     <lang.syntaxHighlighterFactory
             language="fatescript"
             implementationClass="org.legendofdragoon.fatescript.FateScriptSyntaxHighlighterFactory"/>

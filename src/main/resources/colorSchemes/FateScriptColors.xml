@@ -1,0 +1,17 @@
+<list>
+  <option name="FATESCRIPT_CLASS">
+    <value>
+      <option name="FONT_TYPE" value="1"/>
+    </value>
+  </option>
+  <option name="FATESCRIPT_METHOD">
+    <value>
+      <option name="FONT_TYPE" value="2"/>
+    </value>
+  </option>
+  <option name="FATESCRIPT_JUMP_OPS">
+    <value>
+      <option name="FOREGROUND" value="008890"/>
+    </value>
+  </option>
+</list>
