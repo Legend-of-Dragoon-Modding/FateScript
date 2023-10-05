@@ -14,7 +14,7 @@
       <option name="FOREGROUND" value="008890"/>
     </value>
   </option>
-  <option name="FATESCRIPT_MISSING_DECLARATION">
+  <option name="FATESCRIPT_UNDEFINED_SYMBOL">
     <value>
       <option name="FOREGROUND" value="BC3F3C"/>
     </value>

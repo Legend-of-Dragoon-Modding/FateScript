@@ -141,18 +141,21 @@ LODSTRING=.*
   "stor"                      { return STOR; }
   "str"                       { pushState(STATE_INIT_LODSTRING); return STR; }
 
+  // Separators and operators
   ","                         { return COMMA; }
   ":"                         { pushState(STATE_LABEL_REF); return COLON; }
   "["                         { if (zzLexicalState == STATE_INIT_LODSTRING) { popState(); pushState(STATE_LODSTRING); } return LBRACKET; }
   "]"                         { return RBRACKET; }
   "+"                         { return PLUS; }
+
+  // Comparators
   "<="                        { return LTE; }
   "<"                         { return LT;}
   ">="                        { return GTE; }
   ">"                         { return GT; }
   "=="                        { return EQ; }
   "!="                        { return NEQ; }
-  "&"                         { return AND; }
+  "&"                         { return CAND; }
   "!&"                        { return NAND; }
 
   {COMMENT}                   { return COMMENT; }

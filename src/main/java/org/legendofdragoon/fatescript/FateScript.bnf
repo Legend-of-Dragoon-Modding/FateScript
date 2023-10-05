@@ -31,7 +31,7 @@
     gt='>'
     eq='=='
     neq='!='
-    and='&'
+    cand='&'
     nand='!&'
     
     // Keyword ops

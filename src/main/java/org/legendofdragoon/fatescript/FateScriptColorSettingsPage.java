@@ -14,11 +14,28 @@ import java.util.Map;
 public class FateScriptColorSettingsPage implements ColorSettingsPage {
 
   private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-          new AttributesDescriptor("Number", FateScriptSyntaxHighlighter.NUMBER),
-          new AttributesDescriptor("String", FateScriptSyntaxHighlighter.LODSTRING),
-          new AttributesDescriptor("Comment", FateScriptSyntaxHighlighter.COMMENT),
-          new AttributesDescriptor("Ops//Keyword", FateScriptSyntaxHighlighter.KEYWORD_OPS),
-          new AttributesDescriptor("Bad value", FateScriptSyntaxHighlighter.BAD_CHARACTER)
+      new AttributesDescriptor("Number", FateScriptSyntaxHighlighter.NUMBER),
+      new AttributesDescriptor("Label", FateScriptSyntaxHighlighter.LABEL),
+      new AttributesDescriptor("Datatype", FateScriptSyntaxHighlighter.DATATYPE),
+      new AttributesDescriptor("Ops//Keyword", FateScriptSyntaxHighlighter.KEYWORD_OPS),
+      new AttributesDescriptor("Ops//Loop", FateScriptSyntaxHighlighter.LOOP_OPS),
+      new AttributesDescriptor("Ops//Wait", FateScriptSyntaxHighlighter.WAIT_OPS),
+      new AttributesDescriptor("Ops//Bitwise", FateScriptSyntaxHighlighter.BITWISE_OPS),
+      new AttributesDescriptor("Ops//Math", FateScriptSyntaxHighlighter.MATH_OPS),
+      new AttributesDescriptor("Ops//Script", FateScriptSyntaxHighlighter.SCRIPT_OPS),
+      new AttributesDescriptor("Ops//Jump", FateScriptSyntaxHighlighter.JUMP_OPS),
+      new AttributesDescriptor("Ops//Gosub", FateScriptSyntaxHighlighter.GOSUB_OPS),
+      new AttributesDescriptor("Ops//Other", FateScriptSyntaxHighlighter.OTHER_OPS),
+      new AttributesDescriptor("Ops//Useless", FateScriptSyntaxHighlighter.USELESS_OPS),
+      new AttributesDescriptor("Method reference//Class", FateScriptSyntaxHighlighter.CLASS),
+      new AttributesDescriptor("Method reference//Method", FateScriptSyntaxHighlighter.METHOD),
+      new AttributesDescriptor("Brackets and Operators//Comparators", FateScriptSyntaxHighlighter.COMPARATORS),
+      new AttributesDescriptor("Brackets and Operators//Comma", FateScriptSyntaxHighlighter.COMMA),
+      new AttributesDescriptor("Brackets and Operators//Colon", FateScriptSyntaxHighlighter.COLON),
+      new AttributesDescriptor("Brackets and Operators//Brackets", FateScriptSyntaxHighlighter.BRACKETS),
+      new AttributesDescriptor("Brackets and Operators//Operators", FateScriptSyntaxHighlighter.OPERATORS),
+      new AttributesDescriptor("String", FateScriptSyntaxHighlighter.LODSTRING),
+      new AttributesDescriptor("Comment", FateScriptSyntaxHighlighter.COMMENT),
   };
 
   @Nullable
@@ -37,38 +54,38 @@ public class FateScriptColorSettingsPage implements ColorSettingsPage {
   @Override
   public String getDemoText() {
     return """
-            ; SUBROUTINE
-            LABEL_763:
-            call Bttl_800c::scriptGetBentSlot, stor[28], stor[10], 0x0 ; bentIndex, charOrBentSlot, mode
-            mov stor[8], var[128 + stor[10]][5] ; source, dest
-            mov 0x5, var[128 + stor[10]][0] ; source, dest
-            call Bttl_800c::scriptSetBentStat, stor[30], stor[8], SPELL_ID ; bentIndex, value, statIndex
-            call Bttl_800f::scriptSetTempSpellStats, stor[30] ; bentIndex
-            mov stor[8], var[45][119] ; source, dest
-            call Bttl_800c::scriptGetBentStat, stor[30], SPELL_TARGET_TYPE, stor[9] ; bentIndex, statIndex, value
-            jmp_cmp &, 0x80, stor[9], inl[:LABEL_764] ; operand, left, right, addr
-            call Bttl_800f::scriptCheckPhysicalHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
-            jmp inl[:LABEL_765] ; addr
-            LABEL_764:
-            yield
-            call Bttl_800f::scriptCheckSpellOrStatusHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
-            LABEL_765:
-            jmp_cmp ==, 0, stor[9], inl[:LABEL_766] ; operand, right, addr
-            gosub inl[:LABEL_767] ; addr
-            mov stor[9], var[45][119] ; source, dest
-            jmp_cmp ==, 0, stor[8], inl[:LABEL_769] ; operand, right, addr
-            call Bttl_800c::scriptGetBentStat, stor[30], STATUS, stor[9] ; bentIndex, statIndex, value
-            jmp_cmp !&, 0x8, stor[9], inl[:LABEL_769] ; operand, left, right, addr
-            shr 0x1, stor[8] ; right, left
-            LABEL_769:
-            mov var[45][119], stor[9] ; source, dest
-            LABEL_128:
-            rel :PTR_1864_0
-            data str[<speed=0><colour=5>Hellena<colour=0> is not this way.]
-            PTR_1864_3:
-            data 0x18
-            data 0x1
-            return""";
+        ; SUBROUTINE
+        LABEL_763:
+        call Bttl_800c::scriptGetBentSlot, stor[28], stor[10], 0x0 ; bentIndex, charOrBentSlot, mode
+        mov stor[8], var[128 + stor[10]][5] ; source, dest
+        mov 0x5, var[128 + stor[10]][0] ; source, dest
+        call Bttl_800c::scriptSetBentStat, stor[30], stor[8], SPELL_ID ; bentIndex, value, statIndex
+        call Bttl_800f::scriptSetTempSpellStats, stor[30] ; bentIndex
+        mov stor[8], var[45][119] ; source, dest
+        call Bttl_800c::scriptGetBentStat, stor[30], SPELL_TARGET_TYPE, stor[9] ; bentIndex, statIndex, value
+        jmp_cmp &, 0x80, stor[9], inl[:LABEL_764] ; operand, left, right, addr
+        call Bttl_800f::scriptCheckPhysicalHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
+        jmp inl[:LABEL_765] ; addr
+        LABEL_764:
+        yield
+        call Bttl_800f::scriptCheckSpellOrStatusHit, stor[30], stor[28], stor[9] ; attackerIndex, defenderIndex, hit
+        LABEL_765:
+        jmp_cmp ==, 0, stor[9], inl[:LABEL_766] ; operand, right, addr
+        gosub inl[:LABEL_767] ; addr
+        mov stor[9], var[45][119] ; source, dest
+        jmp_cmp ==, 0, stor[8], inl[:LABEL_769] ; operand, right, addr
+        call Bttl_800c::scriptGetBentStat, stor[30], STATUS, stor[9] ; bentIndex, statIndex, value
+        jmp_cmp !&, 0x8, stor[9], inl[:LABEL_769] ; operand, left, right, addr
+        shr 0x1, stor[8] ; right, left
+        LABEL_769:
+        mov var[45][119], stor[9] ; source, dest
+        LABEL_128:
+        rel :PTR_1864_0
+        data str[<speed=0><colour=5>Hellena<colour=0> is not this way.]
+        PTR_1864_3:
+        data 0x18
+        data 0x1
+        return""";
   }
 
   @Nullable
