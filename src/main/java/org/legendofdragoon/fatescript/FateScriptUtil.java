@@ -1,19 +1,14 @@
 package org.legendofdragoon.fatescript;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.legendofdragoon.fatescript.psi.FateScriptFile;
 import org.legendofdragoon.fatescript.psi.FateScriptLabelHeader;
-import org.legendofdragoon.fatescript.psi.FateScriptLabelRef;
-import org.legendofdragoon.fatescript.psi.FateScriptLabelRef;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class FateScriptUtil {
 

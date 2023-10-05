@@ -35,6 +35,8 @@ public class FateScriptSyntaxHighlighter extends SyntaxHighlighterBase {
       createTextAttributesKey("FATESCRIPT_LODSTRING", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
       createTextAttributesKey("FATESCRIPT_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+  public static final TextAttributesKey MISSING_DECLARATION =
+      createTextAttributesKey("FATESCRIPT_MISSING_DECLARATION", DefaultLanguageHighlighterColors.HIGHLIGHTED_REFERENCE);
   public static final TextAttributesKey BAD_CHARACTER =
       createTextAttributesKey("FATESCRIPT_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 

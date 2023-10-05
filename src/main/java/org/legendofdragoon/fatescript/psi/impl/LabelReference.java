@@ -2,8 +2,6 @@ package org.legendofdragoon.fatescript.psi.impl;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.diagnostic.PluginException;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
@@ -29,10 +27,10 @@ public class LabelReference extends PsiReferenceBase<PsiElement> implements PsiP
   @Override
   public ResolveResult @NotNull [] multiResolve(final boolean incompleteCode) {
     final FateScriptFile file = (FateScriptFile) this.myElement.getContainingFile();
-    final List<FateScriptLabelHeader> labelRefs = FateScriptUtil.findLabelReferences(file, this.label);
+    final List<FateScriptLabelHeader> labelHeaders = FateScriptUtil.findLabelReferences(file, this.label);
     final List<ResolveResult> results = new ArrayList<>();
-    for (final FateScriptLabelHeader labelRef : labelRefs) {
-      results.add(new PsiElementResolveResult(labelRef));
+    for (final FateScriptLabelHeader labelHeader : labelHeaders) {
+      results.add(new PsiElementResolveResult(labelHeader));
     }
     return results.toArray(new ResolveResult[results.size()]);
   }

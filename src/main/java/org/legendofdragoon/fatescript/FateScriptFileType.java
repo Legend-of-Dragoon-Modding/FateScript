@@ -4,7 +4,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 public class FateScriptFileType extends LanguageFileType {
   public static final FateScriptFileType INSTANCE = new FateScriptFileType();
